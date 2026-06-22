@@ -14,8 +14,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Inject API key
+        env:
+          GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          sed -i "s/__GEMINI_KEY__/${{ secrets.GEMINI_API_KEY }}/g" phase1_love_diagnosis_v7.html
+          sed -i "s|__GEMINI_KEY__|${GEMINI_KEY}|g" phase1_love_diagnosis_v7.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
