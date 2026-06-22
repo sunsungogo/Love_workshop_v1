@@ -20,10 +20,10 @@ jobs:
           python3 -c "
           import os
           key = os.environ['GEMINI_KEY']
-          with open('phase1_love_diagnosis_v7.html', 'r') as f:
+          with open('index.html', 'r') as f:
               content = f.read()
           content = content.replace('__GEMINI_KEY__', key)
-          with open('phase1_love_diagnosis_v7.html', 'w') as f:
+          with open('index.html', 'w') as f:
               f.write(content)
           print('Replaced:', content.count(key), 'instance(s)')
           "
