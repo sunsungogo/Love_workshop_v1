@@ -620,6 +620,7 @@ window.selectHyp = function(i) {
 window.showResult = function(jsonStr) {
   try {
     jsonStr = jsonStr.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+    jsonStr = jsonStr.replace(/[\n\r\t]/g, m => m==='\n'?'\\n':m==='\r'?'\\r':'\\t');
     const m = jsonStr.match(/\{[\s\S]*\}/);
     const r = JSON.parse(m ? m[0] : jsonStr);
     document.getElementById('rName').textContent = r.typeName||'';
