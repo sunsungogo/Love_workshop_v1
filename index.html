@@ -617,12 +617,28 @@ window.selectHyp = function(i) {
   });
 };
 
+function repairJson(str) {
+  str = str.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+  const m = str.match(/\{[\s\S]*\}/);
+  if (m) str = m[0];
+  try { return JSON.parse(str); } catch(e) {}
+  // Fix unescaped control chars inside strings only
+  let fixed = '', inStr = false, esc = false;
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    if (esc) { fixed += c; esc = false; }
+    else if (c === '\\' && inStr) { fixed += c; esc = true; }
+    else if (c === '"') { fixed += c; inStr = !inStr; }
+    else if (inStr && (c === '\n' || c === '\r' || c === '\t')) {
+      fixed += c==='\n'?'\\n':c==='\r'?'\\r':'\\t';
+    } else { fixed += c; }
+  }
+  return JSON.parse(fixed);
+}
+
 window.showResult = function(jsonStr) {
   try {
-    jsonStr = jsonStr.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
-    jsonStr = jsonStr.replace(/[\n\r\t]/g, m => m==='\n'?'\\n':m==='\r'?'\\r':'\\t');
-    const m = jsonStr.match(/\{[\s\S]*\}/);
-    const r = JSON.parse(m ? m[0] : jsonStr);
+    const r = repairJson(jsonStr);
     document.getElementById('rName').textContent = r.typeName||'';
     document.getElementById('rTheory').textContent = r.theoryBasis||'';
     document.getElementById('rBody').innerHTML =
