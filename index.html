@@ -626,33 +626,42 @@ function repairJson(str) {
   const s = str.indexOf('{'), e = str.lastIndexOf('}');
   if (s !== -1 && e !== -1) str = str.slice(s, e + 1);
   try { return JSON.parse(str); } catch(e1) {}
-  // Repair: fix control chars + unescaped quotes inside strings
-  let fixed = '', inStr = false, esc = false;
+  let out = '', inStr = false, esc = false;
   for (let i = 0; i < str.length; i++) {
     const c = str[i];
-    if (esc) { fixed += c; esc = false; continue; }
-    if (c === '\\' && inStr) { fixed += c; esc = true; continue; }
+    if (esc) { out += c; esc = false; continue; }
+    if (c === '\\' && inStr) { out += c; esc = true; continue; }
     if (c === '"') {
-      if (inStr) {
-        // Check if this is a real closing quote by lookahead
-        let j = i + 1;
-        while (j < str.length && str[j] === ' ') j++;
-        const nx = str[j];
-        if (nx === ':' || nx === ',' || nx === '}' || nx === ']' || j >= str.length) {
-          fixed += c; inStr = false;
-        } else {
-          fixed += '\\"'; // unescaped quote inside string
+      if (!inStr) { out += c; inStr = true; continue; }
+      // Lookahead: skip whitespace
+      let j = i + 1;
+      while (j < str.length && ' \n\r\t'.includes(str[j])) j++;
+      const nx = str[j];
+      // Structural close if followed by : } ] or end
+      if (nx === ':' || nx === '}' || nx === ']' || j >= str.length) {
+        out += c; inStr = false; continue;
+      }
+      // If followed by comma, check what comes after comma
+      if (nx === ',') {
+        let k = j + 1;
+        while (k < str.length && ' \n\r\t'.includes(str[k])) k++;
+        const ak = str[k];
+        // Valid JSON value starters after comma
+        if ('"{}[]'.includes(ak) || (ak >= '0' && ak <= '9') || ak === '-' ||
+            ak === 't' || ak === 'f' || ak === 'n') {
+          out += c; inStr = false; continue;
         }
-      } else { fixed += c; inStr = true; }
+      }
+      out += '\\"'; // content quote, escape it
       continue;
     }
     if (inStr && c < ' ') {
-      fixed += c==='\n'?'\\n':c==='\r'?'\\r':c==='\t'?'\\t':('\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));
+      out += c==='\n'?'\\n':c==='\r'?'\\r':c==='\t'?'\\t':('\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));
       continue;
     }
-    fixed += c;
+    out += c;
   }
-  return JSON.parse(fixed);
+  try { return JSON.parse(out); } catch(e2) { throw e2; }
 }
 
 window.showResult = function(jsonStr) {
