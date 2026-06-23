@@ -582,32 +582,7 @@ async function sendToGemini() {
           generationConfig: {
             temperature: 0.9,
             maxOutputTokens: 4000,
-            responseMimeType: 'application/json',
-            responseSchema: {
-              type: 'object',
-              properties: {
-                typeName:     { type: 'string' },
-                theoryBasis:  { type: 'string' },
-                catchcopy:    { type: 'string' },
-                description:  { type: 'string' },
-                contradiction:{ type: 'string' },
-                strength:     { type: 'string' },
-                experiment:   { type: 'string' },
-                keywords:     { type: 'array', items: { type: 'string' } },
-                phase2hint:   { type: 'string' },
-                hypotheses: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      direction: { type: 'string' },
-                      desc:      { type: 'string' },
-                      actions:   { type: 'array', items: { type: 'string' } }
-                    }
-                  }
-                }
-              }
-            }
+            responseMimeType: 'application/json'
           }
         })
       }
@@ -648,19 +623,34 @@ window.selectHyp = function(i) {
 
 function repairJson(str) {
   str = str.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
-  const m = str.match(/\{[\s\S]*\}/);
-  if (m) str = m[0];
-  try { return JSON.parse(str); } catch(e) {}
-  // Fix unescaped control chars inside strings only
+  const s = str.indexOf('{'), e = str.lastIndexOf('}');
+  if (s !== -1 && e !== -1) str = str.slice(s, e + 1);
+  try { return JSON.parse(str); } catch(e1) {}
+  // Repair: fix control chars + unescaped quotes inside strings
   let fixed = '', inStr = false, esc = false;
   for (let i = 0; i < str.length; i++) {
     const c = str[i];
-    if (esc) { fixed += c; esc = false; }
-    else if (c === '\\' && inStr) { fixed += c; esc = true; }
-    else if (c === '"') { fixed += c; inStr = !inStr; }
-    else if (inStr && (c === '\n' || c === '\r' || c === '\t')) {
-      fixed += c==='\n'?'\\n':c==='\r'?'\\r':'\\t';
-    } else { fixed += c; }
+    if (esc) { fixed += c; esc = false; continue; }
+    if (c === '\\' && inStr) { fixed += c; esc = true; continue; }
+    if (c === '"') {
+      if (inStr) {
+        // Check if this is a real closing quote by lookahead
+        let j = i + 1;
+        while (j < str.length && str[j] === ' ') j++;
+        const nx = str[j];
+        if (nx === ':' || nx === ',' || nx === '}' || nx === ']' || j >= str.length) {
+          fixed += c; inStr = false;
+        } else {
+          fixed += '\\"'; // unescaped quote inside string
+        }
+      } else { fixed += c; inStr = true; }
+      continue;
+    }
+    if (inStr && c < ' ') {
+      fixed += c==='\n'?'\\n':c==='\r'?'\\r':c==='\t'?'\\t':('\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));
+      continue;
+    }
+    fixed += c;
   }
   return JSON.parse(fixed);
 }
