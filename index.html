@@ -579,7 +579,36 @@ async function sendToGemini() {
         headers: {'Content-Type': 'application/json', 'x-goog-api-key': apiKey},
         body: JSON.stringify({
           contents: [{parts: [{text: prompt}]}],
-          generationConfig: {temperature: 0.9, maxOutputTokens: 4000}
+          generationConfig: {
+            temperature: 0.9,
+            maxOutputTokens: 4000,
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: 'object',
+              properties: {
+                typeName:     { type: 'string' },
+                theoryBasis:  { type: 'string' },
+                catchcopy:    { type: 'string' },
+                description:  { type: 'string' },
+                contradiction:{ type: 'string' },
+                strength:     { type: 'string' },
+                experiment:   { type: 'string' },
+                keywords:     { type: 'array', items: { type: 'string' } },
+                phase2hint:   { type: 'string' },
+                hypotheses: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      direction: { type: 'string' },
+                      desc:      { type: 'string' },
+                      actions:   { type: 'array', items: { type: 'string' } }
+                    }
+                  }
+                }
+              }
+            }
+          }
         })
       }
     );
