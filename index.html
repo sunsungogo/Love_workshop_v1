@@ -1,755 +1,191 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>恋愛を、実験する。— PHASE 1 自己分析</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --red:#b71c1c;
-  --red-dark:#991818;
-  --red-light:#fef2f2;
-  --amber:#b45309;
-  --amber-light:#fffbeb;
-  --blue:#1d4ed8;
-  --bg:#fff;
-  --bg2:#f4f4f5;
-  --border:#e5e7eb;
-  --border2:#d1d5db;
-  --text:#1a1a1a;
-  --text2:#6b7280;
-  --text3:#9ca3af;
-  --radius:8px;
-  --font:system-ui,-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;
-  --mono:'SF Mono','Consolas','Hiragino Kaku Gothic ProN',monospace;
-}
-
-body{font-family:var(--font);background:#f0f0f0;color:var(--text);-webkit-text-size-adjust:100%}
-
-/* ── Layout ── */
-.ws{max-width:680px;margin:0 auto;padding:14px 16px}
-
-/* ── Header ── */
-.hdr{background:var(--text);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-radius:var(--radius) var(--radius) 0 0}
-.hdr+.hdr-accent{height:4px;background:var(--red);margin-bottom:12px;border-radius:0}
-.hdr-logo{font-family:var(--mono);font-size:13px;letter-spacing:.15em;color:#fff}
-.hdr-logo span{color:#ef4444}
-.hdr-badge{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:#fff;border:1px solid rgba(255,255,255,.3);padding:3px 10px;border-radius:4px}
-
-/* ── Hero ── */
-.hero{background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:16px 18px;margin:0 0 12px}
-.hero h1{font-size:19px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.35}
-.hero h1 b{color:var(--red)}
-.hero p{font-size:13.5px;color:var(--text2);line-height:1.8}
-.theory{margin-top:10px;padding:9px 12px;background:var(--bg2);border-left:2px solid var(--border2);font-size:11.5px;font-family:var(--mono);color:var(--text2);line-height:1.6}
-
-/* ── User bar ── */
-.user-bar{display:flex;flex-direction:column;gap:12px;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin:0 0 10px}
-.user-field{display:flex;align-items:center;gap:10px}
-.user-field label{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--text2);white-space:nowrap;min-width:46px}
-.user-field input{flex:1;border:none;border-bottom:1px solid var(--border2);background:transparent;font-size:15px;color:var(--text);padding:5px 0;outline:none;min-width:0}
-.partner-toggle{display:flex;align-items:center;gap:10px}
-.partner-toggle label{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--text2);white-space:nowrap;min-width:46px}
-.pt-btns{display:flex}
-.pt-btn{font-family:var(--mono);font-size:13px;letter-spacing:.05em;padding:6px 18px;border:1px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .15s}
-.pt-btn:first-child{border-radius:6px 0 0 6px}
-.pt-btn:last-child{border-radius:0 6px 6px 0;border-left:none}
-.pt-btn.active{background:var(--red);border-color:var(--red);color:#fff}
-
-/* ── Save bar ── */
-.save-bar{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;margin:0 0 10px}
-.save-status{font-family:var(--mono);font-size:11px;color:var(--text3);transition:color .3s}
-.save-status.saved{color:#15803d}
-.reset-btn{background:none;border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:4px 10px;border-radius:6px;cursor:pointer}
-.reset-btn:hover{border-color:var(--red);color:var(--red)}
-
-/* ── Progress ── */
-.prog-bar{display:flex;align-items:center;gap:12px;margin:0 0 14px}
-.prog-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
-.prog-fill{height:100%;background:var(--red);transition:width .3s;width:0%}
-.prog-lbl{font-family:var(--mono);font-size:12px;color:var(--text2);white-space:nowrap}
-
-/* ── Section strip (replaces sec-div) ── */
-.sec-strip{display:flex;align-items:center;background:var(--bg2);border-left:4px solid var(--red);padding:7px 14px;margin:18px 0 10px;border-radius:0 4px 4px 0}
-.sec-strip span{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--red);font-weight:700}
-
-/* ── Question card ── */
-.q-card{background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:16px 16px;margin-bottom:10px}
-.q-hdr{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
-.q-num{font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;background:var(--red);
-  min-width:26px;height:26px;border-radius:4px;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;margin-top:2px}
-.q-meta{flex:1}
-.q-title{font-size:17px;font-weight:600;color:var(--text)}
-.q-en{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.05em;margin-top:3px}
-.q-q{font-size:14px;color:var(--text2);margin-bottom:14px;padding-left:38px;line-height:1.7}
-
-/* ── Sliders ── */
-.sl-wrap{padding-left:0}
-.sl-grp{margin-bottom:14px;padding:10px 12px;border-radius:6px;background:var(--bg2)}
-.sl-grp:last-child{margin-bottom:0}
-.sl-grp.single{background:transparent;padding:0}
-.sl-lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--text2);margin-bottom:7px;padding:3px 8px;border-radius:3px;display:inline-block}
-.sl-lbl.ideal{color:var(--red);background:var(--red-light)}
-.sl-lbl.real{color:var(--amber);background:var(--amber-light)}
-.sl-row{display:flex;align-items:center;gap:10px}
-.sl-row input[type=range]{
-  flex:1;
-  -webkit-appearance:none;
-  appearance:none;
-  height:6px;
-  border-radius:3px;
-  background:#e5e7eb;
-  cursor:pointer;
-  outline:none;
-  padding:9px 0;
-}
-.sl-row input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;
-  width:26px;height:26px;
-  border-radius:50%;
-  background:var(--red);
-  cursor:pointer;
-  border:2px solid #fff;
-  box-shadow:0 1px 4px rgba(0,0,0,.25);
-}
-.sl-row input[type=range].real-sl::-webkit-slider-thumb{background:var(--amber)}
-.sl-row input[type=range]::-moz-range-thumb{
-  width:26px;height:26px;border-radius:50%;
-  background:var(--red);cursor:pointer;border:2px solid #fff;
-}
-.sl-row input[type=range].real-sl::-moz-range-thumb{background:var(--amber)}
-.sl-val{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--red);min-width:22px;text-align:right}
-.sl-val.rv{color:var(--amber)}
-.sl-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text2);
-  background:var(--bg);border:1px solid var(--border2);
-  padding:1px 5px;border-radius:3px;flex-shrink:0}
-.sl-lbls{display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-top:8px;font-size:11px;color:var(--text2);font-family:var(--mono);line-height:1.4}
-.sl-lbls span{flex:1}
-.sl-lbls span:last-child{text-align:right}
-.center-note{text-align:center;margin-top:4px;font-size:11px;font-family:var(--mono);color:var(--text3)}
-
-/* ── Hypothetical badge ── */
-.hypothetical-badge{display:none;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--amber);background:#fef3c7;border:1px solid var(--amber);padding:2px 7px;border-radius:4px;margin-left:8px;vertical-align:middle}
-.no-partner .hypothetical-badge{display:inline}
-
-/* ── TOP3 ── */
-.top3{background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:16px 16px;margin:14px 0}
-.top3-head{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--red);margin-bottom:14px;font-weight:700}
-.top3-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
-.top3-row:last-child{margin-bottom:0}
-.top3-n{font-family:var(--mono);font-size:11px;color:#fff;background:var(--text);width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:6px}
-.top3-inputs{flex:1;display:flex;flex-direction:column;gap:8px}
-.top3-inputs select{border:1px solid var(--border2);background:var(--bg2);font-size:14px;color:var(--text);padding:8px 10px;border-radius:6px;outline:none;width:100%}
-.top3-inputs select:focus{border-color:var(--red)}
-.top3-inputs input{border:none;border-bottom:1px solid var(--border2);background:transparent;font-size:14px;color:var(--text);padding:6px 0;outline:none;width:100%}
-
-/* ── MEMO ── */
-.memo{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:0 0 14px}
-.memo label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--text2);display:block;margin-bottom:8px}
-.memo textarea{width:100%;border:none;border-bottom:1px solid var(--border2);background:transparent;font-size:14px;color:var(--text);resize:none;outline:none;line-height:1.9;min-height:80px}
-
-/* ── Send section ── */
-.send-wrap{background:var(--bg);border:1px solid var(--border);border-top:3px solid var(--text);border-radius:var(--radius);padding:18px 18px;margin:0 0 12px}
-.send-head{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--text);margin-bottom:8px;font-weight:700}
-.send-wrap p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:14px}
-.api-field{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.api-field label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--text2);white-space:nowrap;min-width:72px}
-.api-field input,.api-field select{flex:1;border:1px solid var(--border2);background:var(--bg2);font-size:14px;color:var(--text);padding:9px 12px;border-radius:6px;outline:none;min-width:0}
-.api-field input:focus,.api-field select:focus{border-color:var(--red)}
-.send-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--red);color:#fff;border:none;padding:16px 24px;font-family:var(--mono);font-size:14px;letter-spacing:.12em;cursor:pointer;border-radius:var(--radius);transition:background .2s;width:100%;margin-top:4px}
-.send-btn:hover{background:var(--red-dark)}
-.send-btn:active{transform:scale(.98)}
-.send-btn:disabled{opacity:.6;cursor:not-allowed}
-.loading-msg{display:none;font-family:var(--mono);font-size:12px;color:var(--red);margin-top:10px;text-align:center}
-.error-msg{display:none;font-family:var(--mono);font-size:12px;color:#dc2626;margin-top:10px;text-align:center}
-
-/* ── Result ── */
-.result-area{background:var(--bg);border:1px solid var(--border);border-top:4px solid var(--red);border-radius:var(--radius);padding:20px 18px;margin-top:0;display:none}
-.r-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.r-tag{font-family:var(--mono);font-size:10px;letter-spacing:.25em;color:#fff;background:var(--red);padding:3px 10px;border-radius:3px}
-.r-name{font-size:22px;font-weight:700;color:var(--text);line-height:1.3}
-.r-theory{font-family:var(--mono);font-size:11px;color:var(--text2);margin-top:4px;margin-bottom:16px;padding:8px 12px;background:var(--bg2);border-radius:4px}
-.catchcopy{font-size:16px;font-weight:600;color:var(--red);border-left:3px solid var(--red);padding:8px 12px;margin-bottom:14px;line-height:1.6;background:var(--red-light)}
-.r-desc{font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:10px}
-.contradiction{padding:12px 14px;background:#fef2f2;border-left:3px solid #fca5a5;font-size:13px;color:#7f1d1d;line-height:1.7;margin:12px 0;border-radius:0 4px 4px 0}
-.contradiction .cl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;display:block;margin-bottom:4px;color:var(--red)}
-.kw-wrap{margin:16px 0;padding:14px 16px;background:var(--bg2);border-left:3px solid var(--red);border-radius:0 4px 4px 0}
-.kw-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--red);margin-bottom:10px;font-weight:700}
-.kw-grid{display:flex;flex-wrap:wrap;gap:7px}
-.kw-tag{background:var(--bg);border:1px solid var(--red);color:var(--red);font-family:var(--mono);font-size:12px;padding:5px 12px;border-radius:6px}
-.ph2-box{padding:14px 16px;background:var(--amber-light);border-left:3px solid var(--amber);margin-top:14px;border-radius:0 4px 4px 0}
-.ph2-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--amber);margin-bottom:6px;font-weight:700}
-.ph2-box p{font-size:13px;color:var(--text2);line-height:1.7}
-
-/* ── Hypotheses UI ── */
-.hyp-section{margin:20px 0 4px}
-.hyp-section-label{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--red);margin-bottom:12px;font-weight:700}
-.hyp-cards{display:flex;flex-direction:column;gap:6px}
-.hyp-card{border:1px solid var(--border);border-left:4px solid var(--border2);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;cursor:pointer;transition:border-color .15s,background .15s;position:relative}
-.hyp-card:hover{border-left-color:var(--red);background:var(--bg2)}
-.hyp-card.selected{border-color:var(--border);border-left:4px solid var(--red);background:var(--red-light)}
-.hyp-dir{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--red);margin-bottom:5px;font-weight:700}
-.hyp-desc{font-size:13px;color:var(--text2);line-height:1.6;padding-right:28px}
-.hyp-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text3);transition:transform .2s}
-.hyp-card.selected .hyp-arrow{transform:translateY(-50%) rotate(90deg);color:var(--red)}
-.actions-wrap{display:none;padding:14px 16px;background:var(--bg2);border-left:4px solid var(--red);border-radius:0 0 var(--radius) var(--radius);margin-top:2px;margin-bottom:4px}
-.actions-wrap.show{display:block}
-.actions-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--red);margin-bottom:10px;font-weight:700}
-.action-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:13px;color:var(--text2);line-height:1.6}
-.action-item:last-child{margin-bottom:0}
-.action-num{font-family:var(--mono);font-size:11px;color:#fff;background:var(--red);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-
-/* ── Desktop overrides (≥640px) ── */
-@media(min-width:640px){
-  .ws{padding:20px 24px}
-  .user-bar{flex-direction:row;flex-wrap:wrap;align-items:center;gap:16px}
-  .user-field input{width:140px;flex:none}
-  .q-card{padding:18px 20px}
-  .q-title{font-size:18px}
-  .q-q{font-size:13px;padding-left:38px}
-  .sl-wrap{padding-left:0}
-  .top3-inputs{flex-direction:row;flex-wrap:wrap}
-  .top3-inputs select{flex:none;width:160px}
-  .top3-inputs input{flex:1;min-width:140px}
-}
-</style>
+  <meta charset="utf-8">
+  <title>恋愛を、実験する。— PHASE 1 自己分析</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f1eff4; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #666; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); z-index: 10000; }
+    #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f1eff4; z-index: 9999; }
+    #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
+    #__bundler_placeholder { color: #999; font-size: 14px; }
+  </style>
+  <noscript>
+    <style>#__bundler_loading { display: none; }</style>
+    <div style="position:fixed;bottom:12px;left:12px;font:13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;color:#999;background:rgba(255,255,255,0.9);padding:6px 12px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.08);z-index:10000;">
+      This page requires JavaScript to display.
+    </div>
+  </noscript>
 </head>
 <body>
-<div class="ws">
-<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">恋愛を、実験する。PHASE 1 — スライダーWS＋AI診断</h2>
-
-<div class="hdr">
-  <div class="hdr-logo">LAB-Love-Work<span>Sheets</span></div>
-  <div class="hdr-badge">PHASE 1 — 自己分析</div>
+  <div id="__bundler_thumbnail">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#f1eff4"></rect>
+    <g transform="translate(600 400)">
+      <rect x="-44" y="-150" width="88" height="36" rx="10" fill="#cdc7d4"></rect>
+      <rect x="-34" y="-120" width="68" height="120" rx="14" fill="#fff" stroke="#a29eaa" stroke-width="6"></rect>
+      <path d="M-110 60 L-80 -10 H80 L110 60 a26 26 0 0 1 -26 26 H-84 a26 26 0 0 1 -26 -26 Z" fill="#fff" stroke="#a29eaa" stroke-width="7"></path>
+      <clipPath id="bk"><path d="M-110 60 L-80 -10 H80 L110 60 a26 26 0 0 1 -26 26 H-84 a26 26 0 0 1 -26 -26 Z"></path></clipPath>
+      <g clip-path="url(#bk)">
+        <rect x="-120" y="20" width="240" height="80" fill="#e91e8c"></rect>
+        <rect x="-120" y="20" width="240" height="12" fill="#f48fb1"></rect>
+      </g>
+      <rect x="-22" y="-110" width="44" height="100" rx="8" fill="#9c27b0" opacity=".85"></rect>
+      <circle cx="-30" cy="50" r="9" fill="#fff" opacity=".7"></circle>
+      <circle cx="20" cy="35" r="6" fill="#fff" opacity=".6"></circle>
+    </g>
+  </svg>
 </div>
-<div class="hdr-accent"></div>
+  <div id="__bundler_loading">Unpacking...</div>
 
-<div class="hero">
-  <h1>自分だけの<b>「恋愛」</b>を探してみる</h1>
-  <p>スライダーを動かして、今の自分の感覚に正直に答えてください。正解はありません。全部が実験の素材です。</p>
-  <div class="theory">診断の根拠：Bowlbyの愛着理論・Chapmanの5つの愛情表現・Sternbergの愛の三角理論をベースに設計されたプロンプトでAIが生成します。</div>
-</div>
+  <script>
+    
+document.addEventListener('DOMContentLoaded', async function() {
+  const loading = document.getElementById('__bundler_loading');
+  function setStatus(msg) { if (loading) loading.textContent = msg; }
 
-<div class="user-bar">
-  <div class="user-field"><label>NAME</label><input type="text" id="uName" placeholder="あなたの名前"></div>
-  <div class="user-field"><label>DATE</label><input type="text" id="uDate" placeholder="2026/07/05"></div>
-  <div class="partner-toggle">
-    <label>恋人</label>
-    <div class="pt-btns">
-      <button class="pt-btn active" id="ptYes" onclick="setPartner('yes')">いる</button>
-      <button class="pt-btn" id="ptNo" onclick="setPartner('no')">いない</button>
-    </div>
-  </div>
-</div>
+  // Error sink persists across replaceWith since it's on window, not the DOM.
+  window.addEventListener('error', function(e) {
+    var p = document.body || document.documentElement;
+    var d = document.getElementById('__bundler_err') || p.appendChild(document.createElement('div'));
+    d.id = '__bundler_err';
+    d.style.cssText = 'position:fixed;bottom:12px;left:12px;right:12px;font:12px/1.4 ui-monospace,monospace;background:#2a1215;color:#ff8a80;padding:10px 14px;border-radius:8px;border:1px solid #5c2b2e;z-index:99999;white-space:pre-wrap;max-height:40vh;overflow:auto';
+    d.textContent = (d.textContent ? d.textContent + String.fromCharCode(10) : '') +
+      '[bundle] ' + (e.message || e.type) +
+      (e.filename ? ' (' + e.filename.slice(0, 60) + ':' + e.lineno + ')' : '');
+  }, true);
 
-<div class="save-bar">
-  <span class="save-status" id="saveStatus">— 自動保存</span>
-  <button class="reset-btn" onclick="resetAll()">リセット</button>
-</div>
-
-<div class="prog-bar">
-  <div class="prog-track"><div class="prog-fill" id="pFill"></div></div>
-  <div class="prog-lbl" id="pLbl">0 / 13</div>
-</div>
-
-<div class="sec-strip"><span>PHASE 1-A｜着火・関係定義</span></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">1</div><div class="q-meta"><div class="q-title">恋への着火スピード</div><div class="q-en">Ignition Speed</div></div></div>
-<div class="q-q">Q. 一目惚れする？　友達からじっくり好きになる？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="1" oninput="upd(this)"><span class="sl-val" id="v1">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 直感で即行動（一目惚れ）</span><span>じっくりスローバーン（友達から） <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">2</div><div class="q-meta"><div class="q-title">デートの主導権</div><div class="q-en">Initiative Balance</div></div></div>
-<div class="q-q">Q. デートプラン、自分が引っ張りたい？　任せたい？　一緒に決めたい？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="2" oninput="upd(this)"><span class="sl-val" id="v2">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 自分がリードしたい</span><span>リードされたい（おまかせ） <span class="sl-n">10</span></span></div></div>
-<div class="center-note">← 中間（5）＝一緒に決めたい（対等）→</div>
-</div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">3</div><div class="q-meta"><div class="q-title">関係を進めるペース</div><div class="q-en">Relationship Pace</div></div></div>
-<div class="q-q">Q. 好きな人との距離、どのくらいのペースで縮めたい？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="3" oninput="upd(this)"><span class="sl-val" id="v3">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 早く距離を縮めたい（積極的）</span><span>ゆっくり深めたい（慎重） <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">4</div><div class="q-meta"><div class="q-title">時間の境界</div><div class="q-en">Privacy Regulation</div></div></div>
-<div class="q-q">Q. 休日はずっと一緒？　自分の趣味優先？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="4" oninput="upd(this)"><span class="sl-val" id="v4">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 空き時間はすべてシェア</span><span>一人の時間を最優先 <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="sec-strip"><span>PHASE 1-B｜際どい領域</span></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">5</div><div class="q-meta"><div class="q-title">浮気のライン</div><div class="q-en">Fidelity Threshold</div></div></div>
-<div class="q-q">Q. 異性と2人で飲みに行くのはOK？　どこからが「浮気」だと思う？</div>
-<div class="sl-wrap">
-<div class="sl-grp"><div class="sl-lbl ideal">── 自分の許容ライン（どこからが浮気？）</div><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="5a" oninput="upd(this)"><span class="sl-val" id="v5a">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 身体的接触まではセーフ（寛容）</span><span>2人で会うだけでアウト（厳格） <span class="sl-n">10</span></span></div></div>
-<div class="sl-grp"><div class="sl-lbl real">── 現実：自分がやること</div><div class="sl-row"><input type="range" min="1" max="10" value="5" class="real-sl" data-q="5b" oninput="upd(this)"><span class="sl-val rv" id="v5b">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 絶対しない</span><span>やってしまうことがある <span class="sl-n">10</span></span></div></div>
-</div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">6</div><div class="q-meta"><div class="q-title">独占欲の強さ</div><div class="q-en">Possessiveness</div></div></div>
-<div class="q-q" id="q6text" data-yes="Q. 恋人が元カレ/元カノとLINEしてたら？" data-no="Q. もし恋人がいたとしたら、元カレ/元カノとLINEしてたら？<span class='hypothetical-badge'>理想回答</span>">Q. 恋人が元カレ/元カノとLINEしてたら？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="6" oninput="upd(this)"><span class="sl-val" id="v6">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 全然気にしない（信頼ベース）</span><span>連絡やめてほしい（独占） <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">7</div><div class="q-meta"><div class="q-title">第三者の介入</div><div class="q-en">Third-Party Tolerance</div></div></div>
-<div class="q-q" id="q7text" data-yes="Q. 恋人の「仲良い異性の友達」、どこまで受け入れられる？" data-no="Q. もし恋人がいたとしたら、その人の「仲良い異性の友達」、どこまで受け入れられる？<span class='hypothetical-badge'>理想回答</span>">Q. 恋人の「仲良い異性の友達」、どこまで受け入れられる？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="7" oninput="upd(this)"><span class="sl-val" id="v7">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 普通に歓迎（友達は友達）</span><span>できれば会わせたくない <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">8</div><div class="q-meta"><div class="q-title">対立時の作法</div><div class="q-en">Conflict Resolution</div></div></div>
-<div class="q-q">Q. 喧嘩したとき、その場で言い合いたい？　時間を置きたい？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="8" oninput="upd(this)"><span class="sl-val" id="v8">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> ホット（すぐ言う・感情型）</span><span>クール（待つ・論理型） <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="sec-strip"><span>PHASE 1-C｜関係性の深度</span></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">9</div><div class="q-meta"><div class="q-title">恋愛的指向</div><div class="q-en">Romantic Orientation</div></div></div>
-<div class="q-q">Q. ドキドキしたい？　親友みたいになりたい？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="9" oninput="upd(this)"><span class="sl-val" id="v9">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 恋愛感情（ドキドキ）</span><span>友情・信頼・尊敬 <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">10</div><div class="q-meta"><div class="q-title">関係性のエンジン</div><div class="q-en">Relationship Motivation</div></div></div>
-<div class="q-q">Q. お互い高め合うライバル？　それとも癒し？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="10" oninput="upd(this)"><span class="sl-val" id="v10">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> ダメ出しもする成長志向</span><span>絶対的な味方（オアシス） <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">11</div><div class="q-meta"><div class="q-title">自己開示の深さ</div><div class="q-en">Social Penetration</div></div></div>
-<div class="q-q">Q. スマホのパスワード教えられる？　過去の恋愛は全部話したい？</div>
-<div class="sl-wrap">
-<div class="sl-grp"><div class="sl-lbl ideal">── 自分が開示すること</div><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="11a" oninput="upd(this)"><span class="sl-val" id="v11a">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 全部見せる（フルオープン）</span><span>聞かれても答えない <span class="sl-n">10</span></span></div></div>
-<div class="sl-grp"><div class="sl-lbl real">── 相手に求めること</div><div class="sl-row"><input type="range" min="1" max="10" value="5" class="real-sl" data-q="11b" oninput="upd(this)"><span class="sl-val rv" id="v11b">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 全部知りたい</span><span>知らなくていい（尊重） <span class="sl-n">10</span></span></div></div>
-</div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">12</div><div class="q-meta"><div class="q-title">愛情表現のスタイル</div><div class="q-en">Love Language</div></div></div>
-<div class="q-q">Q. 「好き」は言葉で言ってほしい？　行動・スキンシップで示してほしい？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="12" oninput="upd(this)"><span class="sl-val" id="v12">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> 言葉・言語的表現</span><span>行為・スキンシップ <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="q-card"><div class="q-hdr"><div class="q-num">13</div><div class="q-meta"><div class="q-title">依存の許容度</div><div class="q-en">Mutual Dependence</div></div></div>
-<div class="q-q">Q. 相手に依存されたい？　完全に自立してほしい？</div>
-<div class="sl-wrap"><div class="sl-grp single"><div class="sl-row"><input type="range" min="1" max="10" value="5" data-q="13" oninput="upd(this)"><span class="sl-val" id="v13">5</span></div><div class="sl-lbls"><span><span class="sl-n">1</span> めちゃくちゃ頼られたい</span><span>精神的に自立した大人の関係 <span class="sl-n">10</span></span></div></div></div></div>
-
-<div class="top3">
-  <div class="top3-head">MY PRIORITY — TOP 3</div>
-  <div class="top3-row"><div class="top3-n">1st</div><div class="top3-inputs">
-    <select id="t1"><option value="">設問を選ぶ</option><option>1.着火スピード</option><option>2.主導権</option><option>3.関係を進めるペース</option><option>4.時間の境界</option><option>5.浮気のライン</option><option>6.独占欲</option><option>7.第三者の介入</option><option>8.対立の作法</option><option>9.恋愛的指向</option><option>10.関係のエンジン</option><option>11.自己開示</option><option>12.愛情表現</option><option>13.依存の許容度</option></select>
-    <input type="text" id="r1" placeholder="なぜこれが1番大切？理由を書いてください">
-  </div></div>
-  <div class="top3-row"><div class="top3-n">2nd</div><div class="top3-inputs">
-    <select id="t2"><option value="">設問を選ぶ</option><option>1.着火スピード</option><option>2.主導権</option><option>3.関係を進めるペース</option><option>4.時間の境界</option><option>5.浮気のライン</option><option>6.独占欲</option><option>7.第三者の介入</option><option>8.対立の作法</option><option>9.恋愛的指向</option><option>10.関係のエンジン</option><option>11.自己開示</option><option>12.愛情表現</option><option>13.依存の許容度</option></select>
-    <input type="text" id="r2" placeholder="理由を書いてください">
-  </div></div>
-  <div class="top3-row"><div class="top3-n">3rd</div><div class="top3-inputs">
-    <select id="t3"><option value="">設問を選ぶ</option><option>1.着火スピード</option><option>2.主導権</option><option>3.関係を進めるペース</option><option>4.時間の境界</option><option>5.浮気のライン</option><option>6.独占欲</option><option>7.第三者の介入</option><option>8.対立の作法</option><option>9.恋愛的指向</option><option>10.関係のエンジン</option><option>11.自己開示</option><option>12.愛情表現</option><option>13.依存の許容度</option></select>
-    <input type="text" id="r3" placeholder="理由を書いてください">
-  </div></div>
-</div>
-
-<div class="memo">
-  <label>MEMO / EXCEPTIONS — スライダーに載せられない気持ち、例外、補足</label>
-  <textarea id="memo" placeholder="例：「5番の浮気のライン、状況によって全然違う気がする」など"></textarea>
-</div>
-
-<div class="send-wrap">
-  <div class="send-head">AI診断を受ける</div>
-  <p>Gemini APIキーを入力してボタンを押すと、診断結果がこの画面に直接表示されます。</p>
-  <div class="api-field">
-    <label>MODEL</label>
-    <select id="modelSelect">
-      <option value="gemini-3.5-flash" selected>gemini-3.5-flash（推奨）</option>
-      <option value="gemini-2.5-flash">gemini-2.5-flash（軽量・高速）</option>
-    </select>
-  </div>
-  <div class="api-field" style="display:none">
-    <label>API KEY</label>
-    <input type="password" id="apiKey" value="__GEMINI_KEY__">
-  </div>
-  <button class="send-btn" onclick="sendToGemini()">診断する →</button>
-  <div class="loading-msg" id="loadingMsg">⏳ 診断中です、少々お待ちください…</div>
-  <div class="error-msg" id="errorMsg"></div>
-</div>
-
-<div class="result-area" id="resultArea">
-  <div class="r-header">
-    <span class="r-tag">Your Love Type</span>
-    <div class="r-name" id="rName"></div>
-  </div>
-  <div class="r-theory" id="rTheory"></div>
-  <div id="rBody"></div>
-  <div class="kw-wrap">
-    <div class="kw-label">PHASE 2 キーワード</div>
-    <div class="kw-grid" id="rKw"></div>
-  </div>
-  <div class="ph2-box">
-    <div class="ph2-label">PHASE 2 へのヒント</div>
-    <p id="rPh2"></p>
-  </div>
-  <div id="rHyp"></div>
-</div>
-
-</div>
-
-<script>
-const touched = new Set();
-const mainKeys = ['1','2','3','4','5a','6','7','8','9','10','11a','12','13'];
-const SAVE_KEY = 'love_ws_v7';
-let partnerStatus = 'yes';
-
-function setPartner(val) {
-  partnerStatus = val;
-  document.getElementById('ptYes').classList.toggle('active', val==='yes');
-  document.getElementById('ptNo').classList.toggle('active', val==='no');
-  ['q6text','q7text'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = el.dataset[val];
-  });
-  saveAll();
-}
-
-function getSliderColor(val, isReal) {
-  var v = parseInt(val);
-  if (v <= 1) return isReal ? '#0369a1' : '#1e40af';
-  if (v <= 2) return isReal ? '#0284c7' : '#1d4ed8';
-  if (v <= 3) return isReal ? '#38bdf8' : '#60a5fa';
-  if (v <= 4) return isReal ? '#7dd3fc' : '#93c5fd';
-  if (v === 5) return '#d1d5db';
-  if (v <= 6) return isReal ? '#fde68a' : '#fca5a5';
-  if (v <= 7) return isReal ? '#fcd34d' : '#f87171';
-  if (v <= 8) return isReal ? '#f59e0b' : '#ef4444';
-  if (v <= 9) return isReal ? '#d97706' : '#dc2626';
-  return isReal ? '#b45309' : '#b71c1c';
-}
-
-function updateSliderGradient(el) {
-  var val = parseInt(el.value);
-  var pct = ((val - 1) / 9 * 100).toFixed(1);
-  var isReal = el.classList.contains('real-sl');
-  var color = getSliderColor(val, isReal);
-  el.style.background = 'linear-gradient(to right,' + color + ' 0%,' + color + ' ' + pct + '%,#e5e7eb ' + pct + '%,#e5e7eb 100%)';
-}
-
-function upd(el) {
-  const k = el.dataset.q;
-  document.getElementById('v'+k).textContent = el.value;
-  touched.add(k);
-  updateSliderGradient(el);
-  const done = mainKeys.filter(k=>touched.has(k)).length;
-  document.getElementById('pFill').style.width = Math.round(done/mainKeys.length*100)+'%';
-  document.getElementById('pLbl').textContent = done+' / 13';
-  saveAll();
-}
-
-function saveAll() {
-  const data = {};
-  document.querySelectorAll('[data-q]').forEach(el => { data['sl_'+el.dataset.q] = el.value; });
-  ['uName','uDate','t1','t2','t3','r1','r2','r3','memo'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) data[id] = el.value;
-  });
-  data['partnerStatus'] = partnerStatus;
-  localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-  const st = document.getElementById('saveStatus');
-  st.textContent = '✓ 保存済み';
-  st.className = 'save-status saved';
-  setTimeout(() => { st.textContent = '— 自動保存'; st.className = 'save-status'; }, 1500);
-}
-
-function loadAll() {
-  const raw = localStorage.getItem(SAVE_KEY);
-  if (!raw) return;
   try {
-    const data = JSON.parse(raw);
-    document.querySelectorAll('[data-q]').forEach(el => {
-      const v = data['sl_'+el.dataset.q];
-      if (v !== undefined) {
-        el.value = v;
-        const valEl = document.getElementById('v'+el.dataset.q);
-        if (valEl) valEl.textContent = v;
-        touched.add(el.dataset.q);
-        if (el.type === 'range') updateSliderGradient(el);
+    const manifestEl = document.querySelector('script[type="__bundler/manifest"]');
+    const templateEl = document.querySelector('script[type="__bundler/template"]');
+    if (!manifestEl || !templateEl) {
+      setStatus('Error: missing bundle data');
+      console.error('[bundler] Missing script tags — manifestEl:', !!manifestEl, 'templateEl:', !!templateEl);
+      return;
+    }
+
+    const manifest = JSON.parse(manifestEl.textContent);
+    let template = JSON.parse(templateEl.textContent);
+
+    const uuids = Object.keys(manifest);
+    setStatus('Unpacking ' + uuids.length + ' assets...');
+
+    const blobUrls = {};
+    await Promise.all(uuids.map(async (uuid) => {
+      const entry = manifest[uuid];
+      try {
+        const binaryStr = atob(entry.data);
+        const bytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+
+        let finalBytes = bytes;
+        if (entry.compressed) {
+          if (typeof DecompressionStream !== 'undefined') {
+            const ds = new DecompressionStream('gzip');
+            const writer = ds.writable.getWriter();
+            const reader = ds.readable.getReader();
+            writer.write(bytes);
+            writer.close();
+            const chunks = [];
+            let totalLen = 0;
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value);
+              totalLen += value.length;
+            }
+            finalBytes = new Uint8Array(totalLen);
+            let offset = 0;
+            for (const chunk of chunks) { finalBytes.set(chunk, offset); offset += chunk.length; }
+          } else {
+            console.warn('DecompressionStream not available, asset ' + uuid + ' may not render');
+          }
+        }
+
+        blobUrls[uuid] = URL.createObjectURL(new Blob([finalBytes], { type: entry.mime }));
+      } catch (err) {
+        console.error('Failed to decode asset ' + uuid + ':', err);
+        blobUrls[uuid] = URL.createObjectURL(new Blob([], { type: entry.mime }));
       }
-    });
-    ['uName','uDate','t1','t2','t3','r1','r2','r3','memo'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el && data[id] !== undefined) el.value = data[id];
-    });
-    const done = mainKeys.filter(k=>touched.has(k)).length;
-    document.getElementById('pFill').style.width = Math.round(done/mainKeys.length*100)+'%';
-    document.getElementById('pLbl').textContent = done+' / 13';
-    if (data['partnerStatus']) setPartner(data['partnerStatus']);
-  } catch(e) { console.warn('load failed', e); }
-}
+    }));
 
-function resetAll() {
-  if (!confirm('入力内容をすべてリセットしますか？')) return;
-  localStorage.removeItem(SAVE_KEY);
-  location.reload();
-}
+    const extResEl = document.querySelector('script[type="__bundler/ext_resources"]');
+    const extResources = extResEl ? JSON.parse(extResEl.textContent) : [];
+    const resourceMap = {};
+    for (const entry of extResources) {
+      if (blobUrls[entry.uuid]) resourceMap[entry.id] = blobUrls[entry.uuid];
+    }
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadAll();
-  document.querySelectorAll('[data-q]').forEach(function(el) {
-    if (el.type === 'range') updateSliderGradient(el);
-  });
-  ['uName','uDate','r1','r2','r3','memo'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', saveAll);
-  });
-  ['t1','t2','t3'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('change', saveAll);
-  });
+    setStatus('Rendering...');
+    for (const uuid of uuids) template = template.split(uuid).join(blobUrls[uuid]);
+
+    // Strip integrity + crossorigin — blob URLs from a file:// document inherit
+    // a null origin, so crossorigin forces a CORS fetch that SRI then rejects.
+    // The manifest bytes are ours; SRI protects against CDN compromise, not this.
+    template = template.replace(/\s+integrity="[^"]*"/gi, '').replace(/\s+crossorigin="[^"]*"/gi, '');
+
+    const resourceScript = '<script>window.__resources = ' +
+      JSON.stringify(resourceMap).split('</' + 'script>').join('<\\/' + 'script>') +
+      ';</' + 'script>';
+    // Inject after <head> so the DOCTYPE stays first; prepending the script
+    // would push the parser into quirks mode. DOMParser always emits a <head>
+    // (synthesizing one if the source HTML omitted it) but may carry
+    // attributes through, so match the full opening tag. slice() rather than
+    // replace() keeps us clear of $-pattern substitution in resourceScript.
+    const headOpen = template.match(/<head[^>]*>/i);
+    if (headOpen) {
+      const i = headOpen.index + headOpen[0].length;
+      template = template.slice(0, i) + resourceScript + template.slice(i);
+    }
+
+    // Parse the template and swap the root element. Scripts inserted via
+    // DOMParser/replaceWith are inert per spec — re-create each with
+    // createElement so they execute, awaiting onload for src scripts to
+    // preserve ordering (React before ReactDOM before Babel before text/babel).
+    const doc = new DOMParser().parseFromString(template, 'text/html');
+    document.documentElement.replaceWith(doc.documentElement);
+    const dead = Array.from(document.scripts);
+    for (const old of dead) {
+      const s = document.createElement('script');
+      for (const a of old.attributes) s.setAttribute(a.name, a.value);
+      s.textContent = old.textContent;
+      // text/babel scripts with a src: fetch and inline. transformScriptTags
+      // does XHR against the src, but blob:null/ from a file:// origin is
+      // silently dropped. Inlining makes it a plain inline babel script,
+      // which transformScriptTags handles unconditionally.
+      if ((s.type === 'text/babel' || s.type === 'text/jsx') && s.src) {
+        const r = await fetch(s.src);
+        s.textContent = await r.text();
+        s.removeAttribute('src');
+      }
+      const p = s.src ? new Promise(function(r) { s.onload = s.onerror = r; }) : null;
+      old.replaceWith(s);
+      if (p) await p;
+    }
+    // Babel standalone auto-transforms type=text/babel on DOMContentLoaded,
+    // which fired before we swapped the document. Trigger manually if present.
+    if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
+      window.Babel.transformScriptTags();
+    }
+  } catch (err) {
+    setStatus('Error unpacking: ' + err.message);
+    console.error('Bundle unpack error:', err);
+  }
 });
 
-function getVal(k) {
-  const el = document.querySelector('[data-q="'+k+'"]');
-  return el ? parseInt(el.value) : 5;
-}
+  </script>
 
-function buildData() {
-  const s = {};
-  ['1','2','3','4','5a','5b','6','7','8','9','10','11a','11b','12','13'].forEach(k=>s[k]=getVal(k));
-  const gap5 = s['5b']-s['5a'];
-  const name = document.getElementById('uName').value || '参加者';
-  const t1 = document.getElementById('t1').value || '未選択';
-  const t2 = document.getElementById('t2').value || '未選択';
-  const t3 = document.getElementById('t3').value || '未選択';
-  const r1 = document.getElementById('r1').value || 'なし';
-  const r2 = document.getElementById('r2').value || 'なし';
-  const r3 = document.getElementById('r3').value || 'なし';
-  const memo = document.getElementById('memo').value || 'なし';
+  <script type="__bundler/manifest">
+{}
+  </script>
 
-  function interp(val, lo, hi) {
-    if (val <= 3) return `${val}（${lo}寄り）`;
-    if (val >= 8) return `${val}（${hi}寄り）`;
-    return `${val}（中間）`;
-  }
+  <script type="__bundler/ext_resources">
+[]
+  </script>
 
-  const partnerNote = partnerStatus === 'no'
-    ? `\n【重要】この参加者は現在恋人がいない状態で、自分の理想・傾向として回答しています。\n- typeName・catchcopy・descriptionは「現在の恋愛」ではなく「その人の恋愛傾向・理想」として表現してください\n- hypothesesの具体アクションは「恋人をつくる・気になる人にアプローチする・関係をスタートさせる」文脈で提案してください\n- 「恋人と〇〇する」ではなく「好きな人に〇〇してみる」などの表現を使ってください`
-    : '';
-
-  return `【恋愛WSワークシート診断依頼】${partnerNote}
-
-参加者：${name}
-恋人：${partnerStatus === 'yes' ? 'いる' : 'いない（理想・傾向で回答）'}
-
-スライダー結果（各設問の意味は末尾の解釈ガイドを参照）：
-1.着火スピード: ${interp(s['1'],'直感・一目惚れ','スローバーン・友達から')}
-2.主導権: ${interp(s['2'],'自分がリードしたい・引っ張りたい','リードされたい・おまかせ')}（中間=一緒に決めたい・対等）
-3.関係を進めるペース: ${interp(s['3'],'早く距離を縮めたい（積極的）','ゆっくり深めたい（慎重）')}
-4.時間の境界: ${interp(s['4'],'時間をすべてシェア','一人時間を優先')}
-5a.浮気の許容ライン: ${interp(s['5a'],'身体的接触まではセーフ（寛容）','2人で会うだけでアウト（厳格）')}
-5b.自分の実際の行動: ${interp(s['5b'],'絶対しない','やってしまうことがある')}
-　→ 5aと5bのズレ: ${gap5>0?'+'+gap5:gap5}（プラス＝自分の行動が自分のラインより緩い）
-6.独占欲: ${interp(s['6'],'気にしない（信頼）','独占したい')}
-7.第三者の介入: ${interp(s['7'],'歓迎','受け入れたくない')}
-8.対立の作法: ${interp(s['8'],'ホット・感情型','クール・論理型')}
-9.恋愛的指向: ${interp(s['9'],'ドキドキ重視','友情・信頼重視')}
-10.関係性のエンジン: ${interp(s['10'],'成長・刺激志向','癒し・安心志向')}
-11a.自己開示（自分から）: ${interp(s['11a'],'フルオープン','クローズド')}
-11b.相手への開示要求: ${interp(s['11b'],'全部知りたい','知らなくていい（尊重）')}
-　→ 11aと11bの関係: 自分の開示=${interp(s['11a'],'多い','少ない')}／相手への要求=${interp(s['11b'],'高い','低い')}
-12.愛情表現: ${interp(s['12'],'言葉・言語派','行為・スキンシップ派')}
-13.依存許容度: ${interp(s['13'],'頼られたい','自立を望む')}
-
-TOP3と理由：
-1位: ${t1} — ${r1}
-2位: ${t2} — ${r2}
-3位: ${t3} — ${r3}
-
-MEMO: ${memo}
-
-【出力ルール】typeName はひらがな多め16字以内（例：ふれあいだいすき派）。hypotheses は3件。文字列値にダブルクォート・改行を含めないこと。`;
-}
-
-async function sendToGemini() {
-  const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) { showError('APIキーを入力してください'); return; }
-
-  const model = document.getElementById('modelSelect').value;
-  const prompt = buildData();
-  const loading = document.getElementById('loadingMsg');
-  const errEl = document.getElementById('errorMsg');
-  const btn = document.querySelector('.send-btn');
-
-  loading.style.display = 'block';
-  errEl.style.display = 'none';
-  btn.disabled = true;
-
-  const responseSchema = {
-    type: 'object',
-    properties: {
-      typeName:     { type: 'string' },
-      theoryBasis:  { type: 'string' },
-      catchcopy:    { type: 'string' },
-      description:  { type: 'string' },
-      contradiction:{ type: 'string' },
-      strength:     { type: 'string' },
-      experiment:   { type: 'string' },
-      keywords:     { type: 'array', items: { type: 'string' } },
-      phase2hint:   { type: 'string' },
-      hypotheses: {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            direction: { type: 'string' },
-            desc:      { type: 'string' },
-            actions:   { type: 'array', items: { type: 'string' } }
-          },
-          required: ['direction','desc','actions']
-        }
-      }
-    },
-    required: ['typeName','theoryBasis','catchcopy','description','contradiction','strength','experiment','keywords','phase2hint','hypotheses']
-  };
-
-  const callApi = async (retries = 3, delay = 5000) => {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
-      {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: 'あなたは恋愛心理の専門家です。必ず指定されたJSONスキーマの形式のみで返答してください。文字列値の中にダブルクォートや改行を含めないでください。' }] },
-          contents: [{parts: [{text: prompt}]}],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 4000,
-            responseMimeType: 'application/json',
-            responseSchema,
-            thinkingConfig: { thinkingBudget: 0 }
-          }
-        })
-      }
-    );
-    if (res.status === 429 || res.status === 503) {
-      const err = await res.json().catch(()=>({}));
-      const msg = err?.error?.message || '';
-      if (retries > 0) {
-        const wait = msg.match(/retry in ([\d.]+)s/i);
-        const ms = wait ? Math.ceil(parseFloat(wait[1])) * 1000 : delay;
-        loading.textContent = `混み合っています。${Math.ceil(ms/1000)}秒後に再試行…`;
-        await new Promise(r => setTimeout(r, ms));
-        loading.textContent = '診断中…';
-        return callApi(retries - 1, delay * 2);
-      }
-      throw new Error(msg || `HTTP ${res.status}`);
-    }
-    if (!res.ok) {
-      const err = await res.json().catch(()=>({}));
-      throw new Error(err?.error?.message || `HTTP ${res.status}`);
-    }
-    return res;
-  };
-
-  try {
-    const res = await callApi();
-    const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    if (!text) throw new Error('レスポンスが空でした');
-    showResult(text);
-  } catch(e) {
-    showError('エラー: ' + e.message);
-  } finally {
-    loading.style.display = 'none';
-    btn.disabled = false;
-  }
-}
-
-function showError(msg) {
-  const el = document.getElementById('errorMsg');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-window.selectHyp = function(i) {
-  document.querySelectorAll('.hyp-card').forEach((c,j)=>{
-    c.classList.toggle('selected', j===i);
-  });
-  document.querySelectorAll('.actions-wrap').forEach((a,j)=>{
-    a.classList.toggle('show', j===i);
-  });
-};
-
-function repairJson(str) {
-  str = str.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
-  const s = str.indexOf('{'), e = str.lastIndexOf('}');
-  if (s !== -1 && e !== -1) str = str.slice(s, e + 1);
-  try { return JSON.parse(str); } catch(e1) {}
-  let out = '', inStr = false, esc = false;
-  for (let i = 0; i < str.length; i++) {
-    const c = str[i];
-    if (esc) { out += c; esc = false; continue; }
-    if (c === '\\' && inStr) { out += c; esc = true; continue; }
-    if (c === '"') {
-      if (!inStr) { out += c; inStr = true; continue; }
-      // Lookahead: skip whitespace
-      let j = i + 1;
-      while (j < str.length && ' \n\r\t'.includes(str[j])) j++;
-      const nx = str[j];
-      // Structural close if followed by : } ] or end
-      if (nx === ':' || nx === '}' || nx === ']' || j >= str.length) {
-        out += c; inStr = false; continue;
-      }
-      // If followed by comma, check what comes after comma
-      if (nx === ',') {
-        let k = j + 1;
-        while (k < str.length && ' \n\r\t'.includes(str[k])) k++;
-        const ak = str[k];
-        // Valid JSON value starters after comma
-        if ('"{}[]'.includes(ak) || (ak >= '0' && ak <= '9') || ak === '-' ||
-            ak === 't' || ak === 'f' || ak === 'n') {
-          out += c; inStr = false; continue;
-        }
-      }
-      out += '\\"'; // content quote, escape it
-      continue;
-    }
-    if (inStr && c < ' ') {
-      out += c==='\n'?'\\n':c==='\r'?'\\r':c==='\t'?'\\t':('\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));
-      continue;
-    }
-    out += c;
-  }
-  try { return JSON.parse(out); } catch(e2) { throw e2; }
-}
-
-window.showResult = function(jsonStr) {
-  try {
-    const r = repairJson(jsonStr);
-    document.getElementById('rName').textContent = r.typeName||'';
-    document.getElementById('rTheory').textContent = r.theoryBasis||'';
-    document.getElementById('rBody').innerHTML =
-      (r.catchcopy?'<div class="catchcopy">'+r.catchcopy+'</div>':'')+
-      '<p class="r-desc">'+(r.description||'')+'</p>'+
-      (r.contradiction?'<div class="contradiction"><span class="cl">データが示す矛盾・盲点</span>'+r.contradiction+'</div>':'')+
-      '<p class="r-desc"><b>強み：</b>'+(r.strength||'')+'</p>'+
-      '<p class="r-desc"><b>今日から試せる実験：</b>'+(r.experiment||'')+'</p>';
-    const kw = document.getElementById('rKw');
-    kw.innerHTML='';
-    (r.keywords||[]).forEach(k=>{const t=document.createElement('span');t.className='kw-tag';t.textContent=k;kw.appendChild(t);});
-    document.getElementById('rPh2').textContent = r.phase2hint||'';
-
-    const hypEl = document.getElementById('rHyp');
-    if (r.hypotheses && r.hypotheses.length) {
-      let html = '<div class="hyp-section"><div class="hyp-section-label">PHASE 2 — 仮説の方向性を選ぶ</div><div class="hyp-cards">';
-      r.hypotheses.forEach((h,i)=>{
-        html += `<div>
-          <div class="hyp-card" onclick="selectHyp(${i})">
-            <div class="hyp-dir">${h.direction||''}</div>
-            <div class="hyp-desc">${h.desc||''}</div>
-            <span class="hyp-arrow">▶</span>
-          </div>
-          <div class="actions-wrap" id="act${i}">
-            <div class="actions-label">具体アクション</div>
-            ${(h.actions||[]).map((a,j)=>`<div class="action-item"><span class="action-num">${j+1}</span>${a}</div>`).join('')}
-          </div>
-        </div>`;
-      });
-      html += '</div></div>';
-      hypEl.innerHTML = html;
-    } else {
-      hypEl.innerHTML = '';
-    }
-
-    document.getElementById('resultArea').style.display='block';
-    document.getElementById('resultArea').scrollIntoView({behavior:'smooth',block:'start'});
-  } catch(e) { showError('結果の表示に失敗しました: ' + e.message); console.error('showResult error:', e); }
-};
-</script>
+  <script type="__bundler/template">
+"<!DOCTYPE html>\n<html lang=\"ja\"><head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>恋愛を、実験する。— PHASE 1 自己分析<\u002Ftitle>\n<style>\n*{box-sizing:border-box;margin:0;padding:0}\n:root{\n  --red:#e6177e;        /* MAIN：マゼンタ（恋愛・情熱の試液） */\n  --red-dark:#c2185b;\n  --red-light:#fde8f1;\n  --amber:#8e24aa;      /* ACCENT2：パープル（神秘・調合の試液） */\n  --amber-light:#f5e9f7;\n  --green:#43a047;      /* ACCENT1：グリーン（薬品・観察の試液） */\n  --green-dark:#2e7d32;\n  --green-light:#e8f4e9;\n  --blue:#1d4ed8;\n  --bg:#fff;\n  --bg2:#f5f3f6;\n  --border:#e8e5ea;\n  --border2:#d4d0d9;\n  --text:#2c2c2c;\n  --text2:#6c6873;\n  --text3:#a29eaa;\n  --radius:8px;\n  --font:system-ui,-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;\n  --mono:'SF Mono','Consolas','Hiragino Kaku Gothic ProN',monospace;\n}\n\nbody{font-family:var(--font);background:#f1eff4;color:var(--text);-webkit-text-size-adjust:100%}\n\n/* ── Layout ── */\n.ws{max-width:680px;margin:0 auto;padding:14px 16px}\n\n/* ── Header ── */\n.hdr{background:var(--text);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-radius:var(--radius) var(--radius) 0 0}\n.hdr+.hdr-accent{height:4px;background:var(--red);margin-bottom:12px;border-radius:0}\n.hdr-logo{font-family:var(--mono);font-size:13px;letter-spacing:.15em;color:#fff}\n.hdr-logo span{color:#ef4444}\n.hdr-badge{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:#fff;border:1px solid rgba(255,255,255,.3);padding:3px 10px;border-radius:4px}\n\n/* ── Hero ── */\n.hero{background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:16px 18px;margin:0 0 12px}\n.hero h1{font-size:19px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.35}\n.hero h1 b{color:var(--red)}\n.hero p{font-size:13.5px;color:var(--text2);line-height:1.8}\n.theory{margin-top:10px;padding:9px 12px;background:var(--bg2);border-left:2px solid var(--border2);font-size:11.5px;font-family:var(--mono);color:var(--text2);line-height:1.6}\n\n/* ── User bar ── */\n.user-bar{display:flex;flex-direction:column;gap:12px;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin:0 0 10px}\n.user-field{display:flex;align-items:center;gap:10px}\n.user-field label{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--text2);white-space:nowrap;min-width:46px}\n.user-field input{flex:1;border:none;border-bottom:1px solid var(--border2);background:transparent;font-size:15px;color:var(--text);padding:5px 0;outline:none;min-width:0}\n.partner-toggle{display:flex;align-items:center;gap:10px}\n.partner-toggle label{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--text2);white-space:nowrap;min-width:46px}\n.pt-btns{display:flex}\n.pt-btn{font-family:var(--mono);font-size:13px;letter-spacing:.05em;padding:6px 18px;border:1px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .15s}\n.pt-btn:first-child{border-radius:6px 0 0 6px}\n.pt-btn:last-child{border-radius:0 6px 6px 0;border-left:none}\n.pt-btn.active{background:var(--red);border-color:var(--red);color:#fff}\n\n/* ── Save bar ── */\n.save-bar{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;margin:0 0 10px}\n.save-status{font-family:var(--mono);font-size:11px;color:var(--text3);transition:color .3s}\n.save-status.saved{color:#15803d}\n.reset-btn{background:none;border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:4px 10px;border-radius:6px;cursor:pointer}\n.reset-btn:hover{border-color:var(--red);color:var(--red)}\n\n/* ── Progress ── */\n.prog-bar{display:flex;align-items:center;gap:12px;margin:0 0 14px}\n.prog-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}\n.prog-fill{height:100%;background:var(--red);transition:width .3s;width:0%}\n.prog-lbl{font-family:var(--mono);font-size:12px;color:var(--text2);white-space:nowrap}\n\n/* ── Section strip (replaces sec-div) ── */\n.sec-strip{display:flex;align-items:center;background:var(--bg2);border-left:4px solid var(--red);padding:7px 14px;margin:18px 0 10px;border-radius:0 4px 4px 0}\n.sec-strip span{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--red);font-weight:700;display:flex;align-items:center}\n.sec-strip span::before{content:\"\\1F9EA\";margin-right:8px;font-size:14px;line-height:1}\n\n/* ── Question card ── */\n.q-card{background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:16px 16px;margin-bottom:10px}\n.q-hdr{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}\n.q-num{font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;background:var(--red);\n  min-width:26px;height:26px;border-radius:4px;\n  display:flex;align-items:center;justify-content:center;\n  flex-shrink:0;margin-top:2px}\n.q-meta{flex:1}\n.q-title{font-size:17px;font-weight:600;color:var(--text)}\n.q-en{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.05em;margin-top:3px}\n.q-q{font-size:14px;color:var(--text2);margin-bottom:14px;padding-left:38px;line-height:1.7}\n\n/* ── Sliders ── */\n.sl-wrap{padding-left:0}\n.sl-grp{margin-bottom:14px;padding:10px 12px;border-radius:6px;background:var(--bg2)}\n.sl-grp:last-child{margin-bottom:0}\n.sl-grp.single{background:transparent;padding:0}\n.sl-lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--text2);margin-bottom:7px;padding:3px 8px;border-radius:3px;display:inline-block}\n.sl-lbl.ideal{color:var(--red);background:var(--red-light)}\n.sl-lbl.real{color:var(--amber);background:var(--amber-light)}\n.sl-row{display:flex;align-items:center;gap:10px;position:relative}\n/* 試験管（横倒し）の口＝右端のガラスリム */\n.sl-row::after{content:\"\";position:absolute;right:31px;top:50%;transform:translateY(-50%);width:9px;height:30px;pointer-events:none;z-index:4;border-radius:3px;background:linear-gradient(to right,rgba(255,255,255,0),rgba(255,255,255,.7));border:1.5px solid var(--border2);border-left:none;box-shadow:inset -1px 0 2px rgba(255,255,255,.9)}\n/* 試験管の目盛り（graduation marks）—トラック上にオーバーレイ */\n.sl-row::before{content:\"\";position:absolute;left:14px;right:42px;top:50%;transform:translateY(-50%);height:24px;pointer-events:none;z-index:3;border-radius:4px;background-image:repeating-linear-gradient(to right,rgba(60,50,70,.20) 0 1.5px,transparent 1.5px calc(100%/9))}\n.sl-row input[type=range]{\n  flex:1;\n  -webkit-appearance:none;\n  appearance:none;\n  height:26px;\n  /* 左＝丸い閉じた底（試験管の底） / 右＝口もと（ストレート） */\n  border-radius:13px 5px 5px 13px;\n  background:#e7e3ec;\n  cursor:pointer;\n  outline:none;\n  padding:0;\n  border:1.5px solid var(--border2);\n  box-shadow:inset 0 2px 4px rgba(60,40,55,.16), inset 0 -1px 0 rgba(255,255,255,.7), inset 2px 0 3px rgba(255,255,255,.5);\n}\n.sl-row input[type=range]::-webkit-slider-thumb{\n  -webkit-appearance:none;\n  width:13px;height:30px;\n  border-radius:6px;\n  background:var(--thumb, var(--red));\n  background-image:linear-gradient(to right, rgba(255,255,255,.55), rgba(255,255,255,0) 55%);\n  cursor:pointer;\n  border:2.5px solid #fff;\n  box-shadow:0 1px 5px rgba(60,30,55,.4), 0 0 0 1px rgba(0,0,0,.05);\n}\n.sl-row input[type=range].real-sl::-webkit-slider-thumb{background:var(--thumb, var(--amber));background-image:linear-gradient(to right, rgba(255,255,255,.55), rgba(255,255,255,0) 55%)}\n.sl-row input[type=range]::-moz-range-thumb{\n  width:13px;height:30px;border-radius:6px;\n  background:var(--thumb, var(--red));cursor:pointer;border:2.5px solid #fff;\n  box-shadow:0 1px 5px rgba(60,30,55,.4);\n}\n.sl-row input[type=range].real-sl::-moz-range-thumb{background:var(--thumb, var(--amber))}\n.sl-val{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--red);min-width:22px;text-align:right}\n.sl-val.rv{color:var(--amber)}\n.sl-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text2);\n  background:var(--bg);border:1px solid var(--border2);\n  padding:1px 5px;border-radius:3px;flex-shrink:0}\n.sl-lbls{display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-top:8px;font-size:11px;color:var(--text2);font-family:var(--mono);line-height:1.4}\n.sl-lbls span{flex:1}\n.sl-lbls span:last-child{text-align:right}\n.center-note{text-align:center;margin-top:4px;font-size:11px;font-family:var(--mono);color:var(--text3)}\n\n/* ── Hypothetical badge ── */\n.hypothetical-badge{display:none;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--amber);background:#fef3c7;border:1px solid var(--amber);padding:2px 7px;border-radius:4px;margin-left:8px;vertical-align:middle}\n.no-partner .hypothetical-badge{display:inline}\n\n/* ── TOP3 ── */\n.top3{background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:16px 16px;margin:14px 0}\n.top3-head{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--red);margin-bottom:14px;font-weight:700}\n.top3-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}\n.top3-row:last-child{margin-bottom:0}\n.top3-n{font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35);width:40px;height:48px;background-repeat:no-repeat;background-position:center;background-size:contain;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px;box-sizing:border-box;flex-shrink:0;margin-top:0}\n/* 1st：丸底フラスコ（赤い試液） */\n.top3-row:nth-of-type(2) .top3-n{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 48'%3E%3Crect x='13' y='3' width='14' height='3' rx='1.5' fill='%23b0aab8'/%3E%3Crect x='17' y='5' width='6' height='20' rx='2' fill='%23f4f0f6' stroke='%23a29eaa' stroke-width='1.4'/%3E%3Ccircle cx='20' cy='32' r='12' fill='%23f4f0f6' stroke='%23a29eaa' stroke-width='1.4'/%3E%3Cpath d='M8 31 A12 12 0 0 0 32 31 Z' fill='%23e91e8c'/%3E%3Cellipse cx='20' cy='31' rx='11.7' ry='2.2' fill='%23f06292'/%3E%3Ccircle cx='20' cy='32' r='12' fill='none' stroke='%23a29eaa' stroke-width='1.4'/%3E%3C/svg%3E\")}\n/* 2nd：三角フラスコ（緑の試液） */\n.top3-row:nth-of-type(3) .top3-n{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 48'%3E%3Crect x='15' y='4' width='10' height='3' rx='1.5' fill='%23b0aab8'/%3E%3Crect x='16.5' y='6' width='7' height='8' fill='%23f4f0f6' stroke='%23a29eaa' stroke-width='1.4'/%3E%3Cpath d='M15 13 L7 42 H33 L25 13 Z' fill='%23f4f0f6' stroke='%23a29eaa' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M10.6 29 L7 42 H33 L29.4 29 Z' fill='%2343a047'/%3E%3Crect x='10.6' y='29' width='18.8' height='2.2' fill='%2381c784'/%3E%3Cpath d='M15 13 L7 42 H33 L25 13 Z' fill='none' stroke='%23a29eaa' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E\")}\n/* 3rd：ビーカー（ピンクの試液） */\n.top3-row:nth-of-type(4) .top3-n{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 48'%3E%3Cpath d='M7 10 L11 13' fill='none' stroke='%23a29eaa' stroke-width='1.4' stroke-linecap='round'/%3E%3Cpath d='M10 13 H30 V38 a3 3 0 0 1 -3 3 H13 a3 3 0 0 1 -3 -3 Z' fill='%23f4f0f6' stroke='%23a29eaa' stroke-width='1.4'/%3E%3Cpath d='M10 27 H30 V38 a3 3 0 0 1 -3 3 H13 a3 3 0 0 1 -3 -3 Z' fill='%23ec407a'/%3E%3Crect x='10' y='27' width='20' height='2.2' fill='%23f48fb1'/%3E%3Cpath d='M22 18 h5 M22 23 h5' stroke='%23a29eaa' stroke-width='1' stroke-linecap='round' opacity='.6'/%3E%3Cpath d='M10 13 H30 V38 a3 3 0 0 1 -3 3 H13 a3 3 0 0 1 -3 -3 Z' fill='none' stroke='%23a29eaa' stroke-width='1.4'/%3E%3C/svg%3E\")}\n.top3-inputs{flex:1;display:flex;flex-direction:column;gap:8px}\n.top3-inputs select{border:1px solid var(--border2);background:var(--bg2);font-size:14px;color:var(--text);padding:8px 10px;border-radius:6px;outline:none;width:100%}\n.top3-inputs select:focus{border-color:var(--red)}\n.top3-inputs input{border:none;border-bottom:1px solid var(--border2);background:transparent;font-size:14px;color:var(--text);padding:6px 0;outline:none;width:100%}\n\n/* ── MEMO ── */\n.memo{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:0 0 14px}\n.memo label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--text2);display:block;margin-bottom:8px}\n.memo textarea{width:100%;border:none;border-bottom:1px solid var(--border2);background:transparent;font-size:14px;color:var(--text);resize:none;outline:none;line-height:1.9;min-height:80px}\n\n/* ── Send section ── */\n.send-wrap{background:var(--bg);border:1px solid var(--border);border-top:3px solid var(--text);border-radius:var(--radius);padding:18px 18px;margin:0 0 12px}\n.send-head{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--text);margin-bottom:8px;font-weight:700}\n.send-wrap p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:14px}\n.api-field{display:flex;align-items:center;gap:10px;margin-bottom:12px}\n.api-field label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--text2);white-space:nowrap;min-width:72px}\n.api-field input,.api-field select{flex:1;border:1px solid var(--border2);background:var(--bg2);font-size:14px;color:var(--text);padding:9px 12px;border-radius:6px;outline:none;min-width:0}\n.api-field input:focus,.api-field select:focus{border-color:var(--red)}\n.send-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--red) 0%,var(--amber) 100%);color:#fff;border:none;padding:16px 24px;font-family:var(--mono);font-size:14px;letter-spacing:.12em;cursor:pointer;border-radius:var(--radius);transition:filter .2s,transform .1s;width:100%;margin-top:4px}\n.send-btn:hover{filter:brightness(.93)}\n.send-btn:active{transform:scale(.98)}\n.send-btn:disabled{opacity:.6;cursor:not-allowed}\n.loading-msg{display:none;font-family:var(--mono);font-size:12px;color:var(--red);margin-top:10px;text-align:center}\n.error-msg{display:none;font-family:var(--mono);font-size:12px;color:#dc2626;margin-top:10px;text-align:center}\n\n/* ── Result ── */\n.result-area{background:var(--bg);border:1px solid var(--border);border-top:4px solid var(--red);border-radius:var(--radius);padding:20px 18px;margin-top:0;display:none}\n.r-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}\n.r-tag{font-family:var(--mono);font-size:10px;letter-spacing:.25em;color:#fff;background:var(--red);padding:3px 10px;border-radius:3px}\n.r-name{font-size:23px;font-weight:700;color:var(--text);line-height:1.3;letter-spacing:.01em;border-bottom:2px solid var(--red);padding-bottom:3px}\n.r-theory{font-family:var(--mono);font-size:11px;color:var(--text2);margin-top:4px;margin-bottom:16px;padding:8px 12px;background:var(--bg2);border-radius:4px}\n.catchcopy{font-size:16px;font-weight:600;color:var(--red);border-left:3px solid var(--red);padding:8px 12px;margin-bottom:14px;line-height:1.6;background:var(--red-light)}\n.r-desc{font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:10px}\n.contradiction{padding:12px 14px;background:#fef2f2;border-left:3px solid #fca5a5;font-size:13px;color:#7f1d1d;line-height:1.7;margin:12px 0;border-radius:0 4px 4px 0}\n.contradiction .cl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;display:block;margin-bottom:4px;color:var(--red)}\n.kw-wrap{margin:16px 0;padding:14px 16px;background:var(--bg2);border-left:3px solid var(--red);border-radius:0 4px 4px 0}\n.kw-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--red);margin-bottom:10px;font-weight:700}\n.kw-grid{display:flex;flex-wrap:wrap;gap:7px}\n.kw-tag{background:var(--bg);border:1px solid var(--red);color:var(--red);font-family:var(--mono);font-size:12px;padding:5px 13px;border-radius:999px;font-weight:600}\n.kw-tag:nth-child(3n+2){border-color:var(--green);color:var(--green-dark)}\n.kw-tag:nth-child(3n+3){border-color:var(--amber);color:var(--amber)}\n.ph2-box{padding:14px 16px;background:var(--amber-light);border-left:3px solid var(--amber);margin-top:14px;border-radius:0 4px 4px 0}\n.ph2-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--amber);margin-bottom:6px;font-weight:700}\n.ph2-box p{font-size:13px;color:var(--text2);line-height:1.7}\n\n/* ── Hypotheses UI ── */\n.hyp-section{margin:20px 0 4px}\n.hyp-section-label{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--red);margin-bottom:12px;font-weight:700}\n.hyp-cards{display:flex;flex-direction:column;gap:6px}\n.hyp-card{border:1px solid var(--border);border-left:4px solid var(--border2);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;cursor:pointer;transition:border-color .15s,background .15s;position:relative}\n.hyp-card:hover{border-left-color:var(--red);background:var(--bg2)}\n.hyp-card.selected{border-color:var(--border);border-left:4px solid var(--red);background:var(--red-light)}\n.hyp-dir{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--red);margin-bottom:5px;font-weight:700}\n.hyp-desc{font-size:13px;color:var(--text2);line-height:1.6;padding-right:28px}\n.hyp-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text3);transition:transform .2s}\n.hyp-card.selected .hyp-arrow{transform:translateY(-50%) rotate(90deg);color:var(--red)}\n.actions-wrap{display:none;padding:14px 16px;background:var(--bg2);border-left:4px solid var(--red);border-radius:0 0 var(--radius) var(--radius);margin-top:2px;margin-bottom:4px}\n.actions-wrap.show{display:block}\n.actions-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--red);margin-bottom:10px;font-weight:700}\n.action-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:13px;color:var(--text2);line-height:1.6}\n.action-item:last-child{margin-bottom:0}\n.action-num{font-family:var(--mono);font-size:11px;color:#fff;background:var(--red);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}\n\n/* ── Desktop overrides (≥640px) ── */\n@media(min-width:640px){\n  .ws{padding:20px 24px}\n  .user-bar{flex-direction:row;flex-wrap:wrap;align-items:center;gap:16px}\n  .user-field input{width:140px;flex:none}\n  .q-card{padding:18px 20px}\n  .q-title{font-size:18px}\n  .q-q{font-size:13px;padding-left:38px}\n  .sl-wrap{padding-left:0}\n  .top3-inputs{flex-direction:row;flex-wrap:wrap}\n  .top3-inputs select{flex:none;width:160px}\n  .top3-inputs input{flex:1;min-width:140px}\n}\n\n/* ── 調合中オーバーレイ ── */\n#mixOverlay{position:fixed;inset:0;z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:30px;background:radial-gradient(120% 90% at 50% 30%,rgba(58,40,66,.82),rgba(22,16,28,.9));backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}\n#mixOverlay.on{display:flex}\n.mix-scene{position:relative;width:240px;height:210px}\n.mix-tube{position:absolute;top:6px;width:30px;height:72px;border:2.5px solid rgba(255,255,255,.72);border-top:none;border-radius:5px 5px 13px 13px;background:rgba(255,255,255,.1);overflow:hidden;transform-origin:50% 100%}\n.mix-tube .lip{position:absolute;top:-4px;left:-3px;right:-3px;height:5px;border-radius:3px;background:rgba(255,255,255,.85);overflow:visible}\n.mix-tube i{position:absolute;left:0;right:0;bottom:0;height:60%;border-radius:0 0 9px 9px}\n.tube-l{left:30px;animation:pourL 2.6s ease-in-out infinite}\n.tube-c{left:105px;animation:pourC 2.6s ease-in-out infinite}\n.tube-r{left:180px;animation:pourR 2.6s ease-in-out infinite}\n.tube-l i{background:linear-gradient(#f06292,#d81b60)}\n.tube-c i{background:linear-gradient(#66bb6a,#388e3c)}\n.tube-r i{background:linear-gradient(#ba68c8,#7b1fa2)}\n.mix-drop{position:absolute;top:74px;width:9px;height:12px;border-radius:50% 50% 50% 50%/65% 65% 40% 40%;opacity:0}\n.drop-l{left:44px;background:#d81b60;animation:dropL 2.6s ease-in infinite}\n.drop-c{left:118px;background:#388e3c;animation:dropC 2.6s ease-in .1s infinite}\n.drop-r{left:194px;background:#7b1fa2;animation:dropR 2.6s ease-in .2s infinite}\n.mix-beaker{position:absolute;left:76px;top:120px;width:88px;height:84px;border:3px solid rgba(255,255,255,.8);border-top:none;border-radius:6px 6px 18px 18px;background:rgba(255,255,255,.08);overflow:hidden}\n.mix-beaker .lip{position:absolute;top:-4px;left:-5px;right:-5px;height:5px;border-radius:3px;background:rgba(255,255,255,.85)}\n.mix-beaker .lip::before{content:\"\";position:absolute;left:-3px;top:-1px;width:9px;height:6px;border-radius:3px;background:rgba(255,255,255,.85);transform:rotate(-32deg)}\n.mix-liquid{position:absolute;left:0;right:0;bottom:0;height:56%;animation:swirl 3s linear infinite}\n.mix-liquid::before{content:\"\";position:absolute;top:-5px;left:-10%;width:120%;height:12px;border-radius:50%;background:rgba(255,255,255,.28)}\n.bub{position:absolute;border-radius:50%;background:rgba(255,255,255,.65)}\n.bub.b1{left:18px;bottom:6px;width:7px;height:7px;animation:rise 1.7s ease-in infinite}\n.bub.b2{left:42px;bottom:6px;width:5px;height:5px;animation:rise 1.5s ease-in .5s infinite}\n.bub.b3{left:60px;bottom:6px;width:8px;height:8px;animation:rise 2s ease-in .9s infinite}\n.bub.b4{left:32px;bottom:6px;width:4px;height:4px;animation:rise 1.3s ease-in 1.2s infinite}\n.mix-label{font-family:var(--mono);color:#fff;font-size:13px;letter-spacing:.24em;font-weight:700;text-align:center;line-height:1.9}\n.mix-label small{display:block;font-size:10px;letter-spacing:.3em;color:rgba(255,255,255,.6)}\n.mix-label .dots::after{content:\"\";animation:dots 1.4s steps(4,end) infinite}\n@keyframes pourL{0%,18%,100%{transform:rotate(0)}40%,60%{transform:rotate(34deg)}}\n@keyframes pourR{0%,18%,100%{transform:rotate(0)}40%,60%{transform:rotate(-34deg)}}\n@keyframes pourC{0%,18%,100%{transform:rotate(0)}40%,60%{transform:rotate(7deg)}}\n@keyframes dropL{0%,40%{opacity:0;transform:translate(0,0) scale(.6)}48%{opacity:1;transform:translate(34px,4px) scale(1)}72%{opacity:1;transform:translate(66px,46px) scale(.85)}80%,100%{opacity:0;transform:translate(70px,52px) scale(.3)}}\n@keyframes dropC{0%,40%{opacity:0;transform:translate(0,0) scale(.6)}48%{opacity:1;transform:translate(4px,4px) scale(1)}72%{opacity:1;transform:translate(4px,46px) scale(.85)}80%,100%{opacity:0;transform:translate(4px,52px) scale(.3)}}\n@keyframes dropR{0%,40%{opacity:0;transform:translate(0,0) scale(.6)}48%{opacity:1;transform:translate(-34px,4px) scale(1)}72%{opacity:1;transform:translate(-66px,46px) scale(.85)}80%,100%{opacity:0;transform:translate(-70px,52px) scale(.3)}}\n@keyframes swirl{0%{background:#e91e8c}33%{background:#43a047}66%{background:#8e24aa}100%{background:#e91e8c}}\n@keyframes rise{0%{transform:translateY(0) scale(.7);opacity:0}25%{opacity:.8}100%{transform:translateY(-42px) scale(1);opacity:0}}\n@keyframes dots{0%{content:\"\"}25%{content:\".\"}50%{content:\"..\"}75%{content:\"...\"}}\n@media (prefers-reduced-motion:reduce){.mix-tube,.mix-drop,.mix-liquid,.bub{animation:none}}\n<\u002Fstyle>\n<\u002Fhead>\n<body>\n\n<div class=\"ws\">\n<h2 class=\"sr-only\" style=\"position:absolute;width:1px;height:1px;overflow:hidden\">恋愛を、実験する。PHASE 1 — スライダーWS＋AI診断<\u002Fh2>\n\n<div class=\"hdr\">\n  <div class=\"hdr-logo\">LAB-Love-Work<span>Sheets<\u002Fspan><\u002Fdiv>\n  <div class=\"hdr-badge\">PHASE 1 — 自己分析<\u002Fdiv>\n<\u002Fdiv>\n<div class=\"hdr-accent\"><\u002Fdiv>\n\n<div class=\"hero\">\n  <h1>自分だけの<b>「恋愛」<\u002Fb>を探してみる<\u002Fh1>\n  <p>スライダーを動かして、今の自分の感覚に正直に答えてください。正解はありません。全部が実験の素材です。<\u002Fp>\n  <div class=\"theory\">診断の根拠：Bowlbyの愛着理論・Chapmanの5つの愛情表現・Sternbergの愛の三角理論をベースに設計されたプロンプトでAIが生成します。<\u002Fdiv>\n<\u002Fdiv>\n\n<div class=\"user-bar\">\n  <div class=\"user-field\"><label>NAME<\u002Flabel><input type=\"text\" id=\"uName\" placeholder=\"あなたの名前\"><\u002Fdiv>\n  <div class=\"user-field\"><label>DATE<\u002Flabel><input type=\"text\" id=\"uDate\" placeholder=\"2026/07/05\"><\u002Fdiv>\n  <div class=\"partner-toggle\">\n    <label>恋人<\u002Flabel>\n    <div class=\"pt-btns\">\n      <button class=\"pt-btn active\" id=\"ptYes\" onclick=\"setPartner('yes')\">いる<\u002Fbutton>\n      <button class=\"pt-btn\" id=\"ptNo\" onclick=\"setPartner('no')\">いない<\u002Fbutton>\n    <\u002Fdiv>\n  <\u002Fdiv>\n<\u002Fdiv>\n\n<div class=\"save-bar\">\n  <span class=\"save-status\" id=\"saveStatus\">— 自動保存<\u002Fspan>\n  <button class=\"reset-btn\" onclick=\"resetAll()\">リセット<\u002Fbutton>\n<\u002Fdiv>\n\n<div class=\"prog-bar\">\n  <div class=\"prog-track\"><div class=\"prog-fill\" id=\"pFill\"><\u002Fdiv><\u002Fdiv>\n  <div class=\"prog-lbl\" id=\"pLbl\">0 / 13<\u002Fdiv>\n<\u002Fdiv>\n\n<div class=\"sec-strip\"><span>PHASE 1-A｜着火・関係定義<\u002Fspan><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">1<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">恋への着火スピード<\u002Fdiv><div class=\"q-en\">Ignition Speed<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. 一目惚れする？　友達からじっくり好きになる？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"1\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v1\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 直感で即行動（一目惚れ）<\u002Fspan><span>じっくりスローバーン（友達から） <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">2<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">デートの主導権<\u002Fdiv><div class=\"q-en\">Initiative Balance<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. デートプラン、自分が引っ張りたい？　任せたい？　一緒に決めたい？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"2\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v2\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 自分がリードしたい<\u002Fspan><span>リードされたい（おまかせ） <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv>\n<div class=\"center-note\">← 中間（5）＝一緒に決めたい（対等）→<\u002Fdiv>\n<\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">3<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">関係を進めるペース<\u002Fdiv><div class=\"q-en\">Relationship Pace<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. 好きな人との距離、どのくらいのペースで縮めたい？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"3\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v3\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 早く距離を縮めたい（積極的）<\u002Fspan><span>ゆっくり深めたい（慎重） <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">4<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">時間の境界<\u002Fdiv><div class=\"q-en\">Privacy Regulation<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. 休日はずっと一緒？　自分の趣味優先？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"4\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v4\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 空き時間はすべてシェア<\u002Fspan><span>一人の時間を最優先 <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"sec-strip\"><span>PHASE 1-B｜際どい領域<\u002Fspan><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">5<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">浮気のライン<\u002Fdiv><div class=\"q-en\">Fidelity Threshold<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. 異性と2人で飲みに行くのはOK？　どこからが「浮気」だと思う？<\u002Fdiv>\n<div class=\"sl-wrap\">\n<div class=\"sl-grp\"><div class=\"sl-lbl ideal\">── 自分の許容ライン（どこからが浮気？）<\u002Fdiv><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"5a\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v5a\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 身体的接触まではセーフ（寛容）<\u002Fspan><span>2人で会うだけでアウト（厳格） <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv>\n<div class=\"sl-grp\"><div class=\"sl-lbl real\">── 現実：自分がやること<\u002Fdiv><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" class=\"real-sl\" data-q=\"5b\" oninput=\"upd(this)\"><span class=\"sl-val rv\" id=\"v5b\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 絶対しない<\u002Fspan><span>やってしまうことがある <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv>\n<\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">6<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">独占欲の強さ<\u002Fdiv><div class=\"q-en\">Possessiveness<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\" id=\"q6text\" data-yes=\"Q. 恋人が元カレ/元カノとLINEしてたら？\" data-no=\"Q. もし恋人がいたとしたら、元カレ/元カノとLINEしてたら？&lt;span class='hypothetical-badge'&gt;理想回答&lt;/span&gt;\">Q. 恋人が元カレ/元カノとLINEしてたら？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"6\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v6\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 全然気にしない（信頼ベース）<\u002Fspan><span>連絡やめてほしい（独占） <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">7<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">第三者の介入<\u002Fdiv><div class=\"q-en\">Third-Party Tolerance<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\" id=\"q7text\" data-yes=\"Q. 恋人の「仲良い異性の友達」、どこまで受け入れられる？\" data-no=\"Q. もし恋人がいたとしたら、その人の「仲良い異性の友達」、どこまで受け入れられる？&lt;span class='hypothetical-badge'&gt;理想回答&lt;/span&gt;\">Q. 恋人の「仲良い異性の友達」、どこまで受け入れられる？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"7\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v7\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 普通に歓迎（友達は友達）<\u002Fspan><span>できれば会わせたくない <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">8<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">対立時の作法<\u002Fdiv><div class=\"q-en\">Conflict Resolution<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. 喧嘩したとき、その場で言い合いたい？　時間を置きたい？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"8\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v8\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> ホット（すぐ言う・感情型）<\u002Fspan><span>クール（待つ・論理型） <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"sec-strip\"><span>PHASE 1-C｜関係性の深度<\u002Fspan><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">9<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">恋愛的指向<\u002Fdiv><div class=\"q-en\">Romantic Orientation<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. ドキドキしたい？　親友みたいになりたい？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"9\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v9\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 恋愛感情（ドキドキ）<\u002Fspan><span>友情・信頼・尊敬 <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">10<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">関係性のエンジン<\u002Fdiv><div class=\"q-en\">Relationship Motivation<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. お互い高め合うライバル？　それとも癒し？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"10\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v10\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> ダメ出しもする成長志向<\u002Fspan><span>絶対的な味方（オアシス） <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">11<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">自己開示の深さ<\u002Fdiv><div class=\"q-en\">Social Penetration<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. スマホのパスワード教えられる？　過去の恋愛は全部話したい？<\u002Fdiv>\n<div class=\"sl-wrap\">\n<div class=\"sl-grp\"><div class=\"sl-lbl ideal\">── 自分が開示すること<\u002Fdiv><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"11a\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v11a\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 全部見せる（フルオープン）<\u002Fspan><span>聞かれても答えない <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv>\n<div class=\"sl-grp\"><div class=\"sl-lbl real\">── 相手に求めること<\u002Fdiv><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" class=\"real-sl\" data-q=\"11b\" oninput=\"upd(this)\"><span class=\"sl-val rv\" id=\"v11b\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 全部知りたい<\u002Fspan><span>知らなくていい（尊重） <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv>\n<\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">12<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">愛情表現のスタイル<\u002Fdiv><div class=\"q-en\">Love Language<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. 「好き」は言葉で言ってほしい？　行動・スキンシップで示してほしい？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"12\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v12\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> 言葉・言語的表現<\u002Fspan><span>行為・スキンシップ <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"q-card\"><div class=\"q-hdr\"><div class=\"q-num\">13<\u002Fdiv><div class=\"q-meta\"><div class=\"q-title\">依存の許容度<\u002Fdiv><div class=\"q-en\">Mutual Dependence<\u002Fdiv><\u002Fdiv><\u002Fdiv>\n<div class=\"q-q\">Q. 相手に依存されたい？　完全に自立してほしい？<\u002Fdiv>\n<div class=\"sl-wrap\"><div class=\"sl-grp single\"><div class=\"sl-row\"><input type=\"range\" min=\"1\" max=\"10\" value=\"5\" data-q=\"13\" oninput=\"upd(this)\"><span class=\"sl-val\" id=\"v13\">5<\u002Fspan><\u002Fdiv><div class=\"sl-lbls\"><span><span class=\"sl-n\">1<\u002Fspan> めちゃくちゃ頼られたい<\u002Fspan><span>精神的に自立した大人の関係 <span class=\"sl-n\">10<\u002Fspan><\u002Fspan><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n\n<div class=\"top3\">\n  <div class=\"top3-head\">MY PRIORITY — TOP 3<\u002Fdiv>\n  <div class=\"top3-row\"><div class=\"top3-n\">1st<\u002Fdiv><div class=\"top3-inputs\">\n    <select id=\"t1\"><option value=\"\">設問を選ぶ<\u002Foption><option>1.着火スピード<\u002Foption><option>2.主導権<\u002Foption><option>3.関係を進めるペース<\u002Foption><option>4.時間の境界<\u002Foption><option>5.浮気のライン<\u002Foption><option>6.独占欲<\u002Foption><option>7.第三者の介入<\u002Foption><option>8.対立の作法<\u002Foption><option>9.恋愛的指向<\u002Foption><option>10.関係のエンジン<\u002Foption><option>11.自己開示<\u002Foption><option>12.愛情表現<\u002Foption><option>13.依存の許容度<\u002Foption><\u002Fselect>\n    <input type=\"text\" id=\"r1\" placeholder=\"なぜこれが1番大切？理由を書いてください\">\n  <\u002Fdiv><\u002Fdiv>\n  <div class=\"top3-row\"><div class=\"top3-n\">2nd<\u002Fdiv><div class=\"top3-inputs\">\n    <select id=\"t2\"><option value=\"\">設問を選ぶ<\u002Foption><option>1.着火スピード<\u002Foption><option>2.主導権<\u002Foption><option>3.関係を進めるペース<\u002Foption><option>4.時間の境界<\u002Foption><option>5.浮気のライン<\u002Foption><option>6.独占欲<\u002Foption><option>7.第三者の介入<\u002Foption><option>8.対立の作法<\u002Foption><option>9.恋愛的指向<\u002Foption><option>10.関係のエンジン<\u002Foption><option>11.自己開示<\u002Foption><option>12.愛情表現<\u002Foption><option>13.依存の許容度<\u002Foption><\u002Fselect>\n    <input type=\"text\" id=\"r2\" placeholder=\"理由を書いてください\">\n  <\u002Fdiv><\u002Fdiv>\n  <div class=\"top3-row\"><div class=\"top3-n\">3rd<\u002Fdiv><div class=\"top3-inputs\">\n    <select id=\"t3\"><option value=\"\">設問を選ぶ<\u002Foption><option>1.着火スピード<\u002Foption><option>2.主導権<\u002Foption><option>3.関係を進めるペース<\u002Foption><option>4.時間の境界<\u002Foption><option>5.浮気のライン<\u002Foption><option>6.独占欲<\u002Foption><option>7.第三者の介入<\u002Foption><option>8.対立の作法<\u002Foption><option>9.恋愛的指向<\u002Foption><option>10.関係のエンジン<\u002Foption><option>11.自己開示<\u002Foption><option>12.愛情表現<\u002Foption><option>13.依存の許容度<\u002Foption><\u002Fselect>\n    <input type=\"text\" id=\"r3\" placeholder=\"理由を書いてください\">\n  <\u002Fdiv><\u002Fdiv>\n<\u002Fdiv>\n\n<div class=\"memo\">\n  <label>MEMO / EXCEPTIONS — スライダーに載せられない気持ち、例外、補足<\u002Flabel>\n  <textarea id=\"memo\" placeholder=\"例：「5番の浮気のライン、状況によって全然違う気がする」など\"><\u002Ftextarea>\n<\u002Fdiv>\n\n<div class=\"send-wrap\">\n  <div class=\"send-head\">AI診断を受ける<\u002Fdiv>\n  <p>Gemini APIキーを入力してボタンを押すと、診断結果がこの画面に直接表示されます。<\u002Fp>\n  <div class=\"api-field\">\n    <label>MODEL<\u002Flabel>\n    <select id=\"modelSelect\">\n      <option value=\"gemini-3.5-flash\" selected=\"\">gemini-3.5-flash（推奨）<\u002Foption>\n      <option value=\"gemini-2.5-flash\">gemini-2.5-flash（軽量・高速）<\u002Foption>\n    <\u002Fselect>\n  <\u002Fdiv>\n  <div class=\"api-field\" style=\"display:none\">\n    <label>API KEY<\u002Flabel>\n    <input type=\"password\" id=\"apiKey\" value=\"__GEMINI_KEY__\">\n  <\u002Fdiv>\n  <button class=\"send-btn\" onclick=\"sendToGemini()\">診断する →<\u002Fbutton>\n  <div class=\"loading-msg\" id=\"loadingMsg\">⏳ 診断中です、少々お待ちください…<\u002Fdiv>\n  <div id=\"mixOverlay\" aria-hidden=\"true\">\n    <div class=\"mix-scene\">\n      <div class=\"mix-tube tube-l\"><span class=\"lip\"><\u002Fspan><i><\u002Fi><\u002Fdiv>\n      <div class=\"mix-tube tube-c\"><span class=\"lip\"><\u002Fspan><i><\u002Fi><\u002Fdiv>\n      <div class=\"mix-tube tube-r\"><span class=\"lip\"><\u002Fspan><i><\u002Fi><\u002Fdiv>\n      <div class=\"mix-drop drop-l\"><\u002Fdiv>\n      <div class=\"mix-drop drop-c\"><\u002Fdiv>\n      <div class=\"mix-drop drop-r\"><\u002Fdiv>\n      <div class=\"mix-beaker\"><span class=\"lip\"><\u002Fspan><div class=\"mix-liquid\"><\u002Fdiv><span class=\"bub b1\"><\u002Fspan><span class=\"bub b2\"><\u002Fspan><span class=\"bub b3\"><\u002Fspan><span class=\"bub b4\"><\u002Fspan><\u002Fdiv>\n    <\u002Fdiv>\n    <div class=\"mix-label\">調合中<span class=\"dots\"><\u002Fspan><small>SYNTHESIZING YOUR TYPE<\u002Fsmall><\u002Fdiv>\n  <\u002Fdiv>\n  <div class=\"error-msg\" id=\"errorMsg\"><\u002Fdiv>\n<\u002Fdiv>\n\n<div class=\"result-area\" id=\"resultArea\">\n  <div class=\"r-header\">\n    <span class=\"r-tag\">Your Love Type<\u002Fspan>\n    <div class=\"r-name\" id=\"rName\"><\u002Fdiv>\n  <\u002Fdiv>\n  <div class=\"r-theory\" id=\"rTheory\"><\u002Fdiv>\n  <div id=\"rBody\"><\u002Fdiv>\n  <div class=\"kw-wrap\">\n    <div class=\"kw-label\">PHASE 2 キーワード<\u002Fdiv>\n    <div class=\"kw-grid\" id=\"rKw\"><\u002Fdiv>\n  <\u002Fdiv>\n  <div class=\"ph2-box\">\n    <div class=\"ph2-label\">PHASE 2 へのヒント<\u002Fdiv>\n    <p id=\"rPh2\"><\u002Fp>\n  <\u002Fdiv>\n  <div id=\"rHyp\"><\u002Fdiv>\n<\u002Fdiv>\n\n<\u002Fdiv>\n\n<script>\nconst touched = new Set();\nconst mainKeys = ['1','2','3','4','5a','6','7','8','9','10','11a','12','13'];\nconst SAVE_KEY = 'love_ws_v7';\nlet partnerStatus = 'yes';\n\nfunction setPartner(val) {\n  partnerStatus = val;\n  document.getElementById('ptYes').classList.toggle('active', val==='yes');\n  document.getElementById('ptNo').classList.toggle('active', val==='no');\n  ['q6text','q7text'].forEach(id => {\n    const el = document.getElementById(id);\n    if (el) el.innerHTML = el.dataset[val];\n  });\n  saveAll();\n}\n\nfunction getSliderColor(val, family) {\n  var v = parseInt(val);\n  // family: 0=マゼンタ（赤） / 1=グリーン（緑） / 2=パープル（紫）、淃さは値で濃く\n  var ramps = [\n    ['#f8bbd0','#f48fb1','#f06292','#ec407a','#e91e8c','#d81b60','#c2185b','#ad1457','#9c133f','#880e4f'],\n    ['#c8e6c9','#a5d6a7','#81c784','#66bb6a','#4caf50','#43a047','#388e3c','#2e7d32','#266a2a','#1b5e20'],\n    ['#e1bee7','#ce93d8','#ba68c8','#ab47bc','#9c27b0','#8e24aa','#7b1fa2','#6a1b9a','#551489','#3e1078']\n  ];\n  var r = ramps[family % 3];\n  return r[Math.max(0, Math.min(9, v - 1))];\n}\n\nfunction updateSliderGradient(el) {\n  var val = parseInt(el.value);\n  var pct = ((val - 1) / 9 * 100).toFixed(1);\n  if (el._family == null) {\n    var all = Array.prototype.slice.call(document.querySelectorAll('.sl-row input[type=range]'));\n    all.forEach(function(s, i){ s._family = i % 3; });\n  }\n  var color = getSliderColor(val, el._family);\n  el.style.setProperty('--thumb', color);\n  el.style.background = 'linear-gradient(to right,' + color + ' 0%,' + color + ' ' + pct + '%,#e7e3ec ' + pct + '%,#e7e3ec 100%)';\n}\n\nfunction upd(el) {\n  const k = el.dataset.q;\n  document.getElementById('v'+k).textContent = el.value;\n  touched.add(k);\n  updateSliderGradient(el);\n  const done = mainKeys.filter(k=>touched.has(k)).length;\n  document.getElementById('pFill').style.width = Math.round(done/mainKeys.length*100)+'%';\n  document.getElementById('pLbl').textContent = done+' / 13';\n  saveAll();\n}\n\nfunction saveAll() {\n  const data = {};\n  document.querySelectorAll('[data-q]').forEach(el => { data['sl_'+el.dataset.q] = el.value; });\n  ['uName','uDate','t1','t2','t3','r1','r2','r3','memo'].forEach(id => {\n    const el = document.getElementById(id);\n    if (el) data[id] = el.value;\n  });\n  data['partnerStatus'] = partnerStatus;\n  localStorage.setItem(SAVE_KEY, JSON.stringify(data));\n  const st = document.getElementById('saveStatus');\n  st.textContent = '✓ 保存済み';\n  st.className = 'save-status saved';\n  setTimeout(() => { st.textContent = '— 自動保存'; st.className = 'save-status'; }, 1500);\n}\n\nfunction loadAll() {\n  const raw = localStorage.getItem(SAVE_KEY);\n  if (!raw) return;\n  try {\n    const data = JSON.parse(raw);\n    document.querySelectorAll('[data-q]').forEach(el => {\n      const v = data['sl_'+el.dataset.q];\n      if (v !== undefined) {\n        el.value = v;\n        const valEl = document.getElementById('v'+el.dataset.q);\n        if (valEl) valEl.textContent = v;\n        touched.add(el.dataset.q);\n        if (el.type === 'range') updateSliderGradient(el);\n      }\n    });\n    ['uName','uDate','t1','t2','t3','r1','r2','r3','memo'].forEach(id => {\n      const el = document.getElementById(id);\n      if (el && data[id] !== undefined) el.value = data[id];\n    });\n    const done = mainKeys.filter(k=>touched.has(k)).length;\n    document.getElementById('pFill').style.width = Math.round(done/mainKeys.length*100)+'%';\n    document.getElementById('pLbl').textContent = done+' / 13';\n    if (data['partnerStatus']) setPartner(data['partnerStatus']);\n  } catch(e) { console.warn('load failed', e); }\n}\n\nfunction resetAll() {\n  if (!confirm('入力内容をすべてリセットしますか？')) return;\n  localStorage.removeItem(SAVE_KEY);\n  location.reload();\n}\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  loadAll();\n  document.querySelectorAll('[data-q]').forEach(function(el) {\n    if (el.type === 'range') updateSliderGradient(el);\n  });\n  ['uName','uDate','r1','r2','r3','memo'].forEach(id => {\n    const el = document.getElementById(id);\n    if (el) el.addEventListener('input', saveAll);\n  });\n  ['t1','t2','t3'].forEach(id => {\n    const el = document.getElementById(id);\n    if (el) el.addEventListener('change', saveAll);\n  });\n});\n\nfunction getVal(k) {\n  const el = document.querySelector('[data-q=\"'+k+'\"]');\n  return el ? parseInt(el.value) : 5;\n}\n\nfunction buildData() {\n  const s = {};\n  ['1','2','3','4','5a','5b','6','7','8','9','10','11a','11b','12','13'].forEach(k=>s[k]=getVal(k));\n  const gap5 = s['5b']-s['5a'];\n  const name = document.getElementById('uName').value || '参加者';\n  const t1 = document.getElementById('t1').value || '未選択';\n  const t2 = document.getElementById('t2').value || '未選択';\n  const t3 = document.getElementById('t3').value || '未選択';\n  const r1 = document.getElementById('r1').value || 'なし';\n  const r2 = document.getElementById('r2').value || 'なし';\n  const r3 = document.getElementById('r3').value || 'なし';\n  const memo = document.getElementById('memo').value || 'なし';\n\n  function interp(val, lo, hi) {\n    if (val <= 3) return `${val}（${lo}寄り）`;\n    if (val >= 8) return `${val}（${hi}寄り）`;\n    return `${val}（中間）`;\n  }\n\n  const partnerNote = partnerStatus === 'no'\n    ? `\\n【重要】この参加者は現在恋人がいない状態で、自分の理想・傾向として回答しています。\\n- typeName・catchcopy・descriptionは「現在の恋愛」ではなく「その人の恋愛傾向・理想」として表現してください\\n- hypothesesの具体アクションは「恋人をつくる・気になる人にアプローチする・関係をスタートさせる」文脈で提案してください\\n- 「恋人と〇〇する」ではなく「好きな人に〇〇してみる」などの表現を使ってください`\n    : '';\n\n  return `【恋愛WSワークシート診断依頼】${partnerNote}\n\n参加者：${name}\n恋人：${partnerStatus === 'yes' ? 'いる' : 'いない（理想・傾向で回答）'}\n\nスライダー結果（各設問の意味は末尾の解釈ガイドを参照）：\n1.着火スピード: ${interp(s['1'],'直感・一目惚れ','スローバーン・友達から')}\n2.主導権: ${interp(s['2'],'自分がリードしたい・引っ張りたい','リードされたい・おまかせ')}（中間=一緒に決めたい・対等）\n3.関係を進めるペース: ${interp(s['3'],'早く距離を縮めたい（積極的）','ゆっくり深めたい（慎重）')}\n4.時間の境界: ${interp(s['4'],'時間をすべてシェア','一人時間を優先')}\n5a.浮気の許容ライン: ${interp(s['5a'],'身体的接触まではセーフ（寛容）','2人で会うだけでアウト（厳格）')}\n5b.自分の実際の行動: ${interp(s['5b'],'絶対しない','やってしまうことがある')}\n　→ 5aと5bのズレ: ${gap5>0?'+'+gap5:gap5}（プラス＝自分の行動が自分のラインより緩い）\n6.独占欲: ${interp(s['6'],'気にしない（信頼）','独占したい')}\n7.第三者の介入: ${interp(s['7'],'歓迎','受け入れたくない')}\n8.対立の作法: ${interp(s['8'],'ホット・感情型','クール・論理型')}\n9.恋愛的指向: ${interp(s['9'],'ドキドキ重視','友情・信頼重視')}\n10.関係性のエンジン: ${interp(s['10'],'成長・刺激志向','癒し・安心志向')}\n11a.自己開示（自分から）: ${interp(s['11a'],'フルオープン','クローズド')}\n11b.相手への開示要求: ${interp(s['11b'],'全部知りたい','知らなくていい（尊重）')}\n　→ 11aと11bの関係: 自分の開示=${interp(s['11a'],'多い','少ない')}／相手への要求=${interp(s['11b'],'高い','低い')}\n12.愛情表現: ${interp(s['12'],'言葉・言語派','行為・スキンシップ派')}\n13.依存許容度: ${interp(s['13'],'頼られたい','自立を望む')}\n\nTOP3と理由：\n1位: ${t1} — ${r1}\n2位: ${t2} — ${r2}\n3位: ${t3} — ${r3}\n\nMEMO: ${memo}\n\n【出力ルール】typeName はひらがな多め16字以内（例：ふれあいだいすき派）。hypotheses は3件。文字列値にダブルクォート・改行を含めないこと。`;\n}\n\nasync function sendToGemini() {\n  const apiKey = document.getElementById('apiKey').value.trim();\n  if (!apiKey) { showError('APIキーを入力してください'); return; }\n\n  const model = document.getElementById('modelSelect').value;\n  const prompt = buildData();\n  const loading = document.getElementById('loadingMsg');\n  const errEl = document.getElementById('errorMsg');\n  const btn = document.querySelector('.send-btn');\n\n  loading.style.display = 'block';\n  var mixOv = document.getElementById('mixOverlay'); if (mixOv) mixOv.classList.add('on');\n  errEl.style.display = 'none';\n  btn.disabled = true;\n\n  const responseSchema = {\n    type: 'object',\n    properties: {\n      typeName:     { type: 'string' },\n      theoryBasis:  { type: 'string' },\n      catchcopy:    { type: 'string' },\n      description:  { type: 'string' },\n      contradiction:{ type: 'string' },\n      strength:     { type: 'string' },\n      experiment:   { type: 'string' },\n      keywords:     { type: 'array', items: { type: 'string' } },\n      phase2hint:   { type: 'string' },\n      hypotheses: {\n        type: 'array',\n        items: {\n          type: 'object',\n          properties: {\n            direction: { type: 'string' },\n            desc:      { type: 'string' },\n            actions:   { type: 'array', items: { type: 'string' } }\n          },\n          required: ['direction','desc','actions']\n        }\n      }\n    },\n    required: ['typeName','theoryBasis','catchcopy','description','contradiction','strength','experiment','keywords','phase2hint','hypotheses']\n  };\n\n  const callApi = async (retries = 3, delay = 5000) => {\n    const res = await fetch(\n      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,\n      {\n        method: 'POST',\n        headers: {'Content-Type': 'application/json'},\n        body: JSON.stringify({\n          systemInstruction: { parts: [{ text: 'あなたは恋愛心理の専門家です。必ず指定されたJSONスキーマの形式のみで返答してください。文字列値の中にダブルクォートや改行を含めないでください。' }] },\n          contents: [{parts: [{text: prompt}]}],\n          generationConfig: {\n            temperature: 0.7,\n            maxOutputTokens: 4000,\n            responseMimeType: 'application/json',\n            responseSchema,\n            thinkingConfig: { thinkingBudget: 0 }\n          }\n        })\n      }\n    );\n    if (res.status === 429 || res.status === 503) {\n      const err = await res.json().catch(()=>({}));\n      const msg = err?.error?.message || '';\n      if (retries > 0) {\n        const wait = msg.match(/retry in ([\\d.]+)s/i);\n        const ms = wait ? Math.ceil(parseFloat(wait[1])) * 1000 : delay;\n        loading.textContent = `混み合っています。${Math.ceil(ms/1000)}秒後に再試行…`;\n        await new Promise(r => setTimeout(r, ms));\n        loading.textContent = '診断中…';\n        return callApi(retries - 1, delay * 2);\n      }\n      throw new Error(msg || `HTTP ${res.status}`);\n    }\n    if (!res.ok) {\n      const err = await res.json().catch(()=>({}));\n      throw new Error(err?.error?.message || `HTTP ${res.status}`);\n    }\n    return res;\n  };\n\n  try {\n    const res = await callApi();\n    const data = await res.json();\n    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';\n    if (!text) throw new Error('レスポンスが空でした');\n    showResult(text);\n  } catch(e) {\n    showError('エラー: ' + e.message);\n  } finally {\n    loading.style.display = 'none';\n    var mixOv2 = document.getElementById('mixOverlay'); if (mixOv2) mixOv2.classList.remove('on');\n    btn.disabled = false;\n  }\n}\n\nfunction showError(msg) {\n  const el = document.getElementById('errorMsg');\n  el.textContent = msg;\n  el.style.display = 'block';\n}\n\nwindow.selectHyp = function(i) {\n  document.querySelectorAll('.hyp-card').forEach((c,j)=>{\n    c.classList.toggle('selected', j===i);\n  });\n  document.querySelectorAll('.actions-wrap').forEach((a,j)=>{\n    a.classList.toggle('show', j===i);\n  });\n};\n\nfunction repairJson(str) {\n  str = str.replace(/^```(?:json)?\\s*/i, '').replace(/\\s*```\\s*$/i, '').trim();\n  const s = str.indexOf('{'), e = str.lastIndexOf('}');\n  if (s !== -1 && e !== -1) str = str.slice(s, e + 1);\n  try { return JSON.parse(str); } catch(e1) {}\n  let out = '', inStr = false, esc = false;\n  for (let i = 0; i < str.length; i++) {\n    const c = str[i];\n    if (esc) { out += c; esc = false; continue; }\n    if (c === '\\\\' && inStr) { out += c; esc = true; continue; }\n    if (c === '\"') {\n      if (!inStr) { out += c; inStr = true; continue; }\n      // Lookahead: skip whitespace\n      let j = i + 1;\n      while (j < str.length && ' \\n\\r\\t'.includes(str[j])) j++;\n      const nx = str[j];\n      // Structural close if followed by : } ] or end\n      if (nx === ':' || nx === '}' || nx === ']' || j >= str.length) {\n        out += c; inStr = false; continue;\n      }\n      // If followed by comma, check what comes after comma\n      if (nx === ',') {\n        let k = j + 1;\n        while (k < str.length && ' \\n\\r\\t'.includes(str[k])) k++;\n        const ak = str[k];\n        // Valid JSON value starters after comma\n        if ('\"{}[]'.includes(ak) || (ak >= '0' && ak <= '9') || ak === '-' ||\n            ak === 't' || ak === 'f' || ak === 'n') {\n          out += c; inStr = false; continue;\n        }\n      }\n      out += '\\\\\"'; // content quote, escape it\n      continue;\n    }\n    if (inStr && c < ' ') {\n      out += c==='\\n'?'\\\\n':c==='\\r'?'\\\\r':c==='\\t'?'\\\\t':('\\\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));\n      continue;\n    }\n    out += c;\n  }\n  try { return JSON.parse(out); } catch(e2) { throw e2; }\n}\n\nwindow.showResult = function(jsonStr) {\n  try {\n    const r = repairJson(jsonStr);\n    document.getElementById('rName').textContent = r.typeName||'';\n    document.getElementById('rTheory').textContent = r.theoryBasis||'';\n    document.getElementById('rBody').innerHTML =\n      (r.catchcopy?'<div class=\"catchcopy\">'+r.catchcopy+'<\u002Fdiv>':'')+\n      '<p class=\"r-desc\">'+(r.description||'')+'<\u002Fp>'+\n      (r.contradiction?'<div class=\"contradiction\"><span class=\"cl\">データが示す矛盾・盲点<\u002Fspan>'+r.contradiction+'<\u002Fdiv>':'')+\n      '<p class=\"r-desc\"><b>強み：<\u002Fb>'+(r.strength||'')+'<\u002Fp>'+\n      '<p class=\"r-desc\"><b>今日から試せる実験：<\u002Fb>'+(r.experiment||'')+'<\u002Fp>';\n    const kw = document.getElementById('rKw');\n    kw.innerHTML='';\n    (r.keywords||[]).forEach(k=>{const t=document.createElement('span');t.className='kw-tag';t.textContent=k;kw.appendChild(t);});\n    document.getElementById('rPh2').textContent = r.phase2hint||'';\n\n    const hypEl = document.getElementById('rHyp');\n    if (r.hypotheses && r.hypotheses.length) {\n      let html = '<div class=\"hyp-section\"><div class=\"hyp-section-label\">PHASE 2 — 仮説の方向性を選ぶ<\u002Fdiv><div class=\"hyp-cards\">';\n      r.hypotheses.forEach((h,i)=>{\n        html += `<div>\n          <div class=\"hyp-card\" onclick=\"selectHyp(${i})\">\n            <div class=\"hyp-dir\">${h.direction||''}<\u002Fdiv>\n            <div class=\"hyp-desc\">${h.desc||''}<\u002Fdiv>\n            <span class=\"hyp-arrow\">▶<\u002Fspan>\n          <\u002Fdiv>\n          <div class=\"actions-wrap\" id=\"act${i}\">\n            <div class=\"actions-label\">具体アクション<\u002Fdiv>\n            ${(h.actions||[]).map((a,j)=>`<div class=\"action-item\"><span class=\"action-num\">${j+1}<\u002Fspan>${a}<\u002Fdiv>`).join('')}\n          <\u002Fdiv>\n        <\u002Fdiv>`;\n      });\n      html += '<\u002Fdiv><\u002Fdiv>';\n      hypEl.innerHTML = html;\n    } else {\n      hypEl.innerHTML = '';\n    }\n\n    document.getElementById('resultArea').style.display='block';\n    document.getElementById('resultArea').scrollIntoView({behavior:'smooth',block:'start'});\n  } catch(e) { showError('結果の表示に失敗しました: ' + e.message); console.error('showResult error:', e); }\n};\n<\u002Fscript>\n\n\n<\u002Fbody><\u002Fhtml>"
+  </script>
 </body>
 </html>
